@@ -1,0 +1,70 @@
+extends Node2D
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = "text"
+
+var points = [Vector2.ZERO]
+var next_points = []
+var color = Color.green
+var current_index = 0
+var is_active = false
+
+var port_start = null
+var port_end = null
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+	
+func start(port:Node2D):
+	self.global_position = port.global_position
+	is_active = true
+	port_start = port
+
+
+func finish(port:Node2D):
+	compute_next_points(to_local(port.global_position))
+	commit_next_points()
+	update()
+	is_active = false
+	port_end = port
+	
+
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+		if event.is_pressed():
+			commit_next_points()
+
+func commit_next_points():
+	for p in next_points:
+		points.append(p)
+	next_points.clear()
+
+func compute_next_points(target:Vector2):
+	var lp = points.back()
+	
+	var d = lp - target
+	
+	if d.x == 0 or d.y == 0:
+		next_points = [target]
+	elif abs(d.x) < abs(d.y):
+		next_points = [Vector2(lp.x, target.y), target]
+	else:
+		next_points = [Vector2(target.x, lp.y), target]
+
+func _process(delta):
+	if is_active:
+		compute_next_points(get_local_mouse_position())
+		update()
+
+func _draw():
+	var lp = Vector2.ZERO
+	draw_circle(lp, 4, color)
+	for p in points:
+		draw_line(lp, p, color, 2)
+		lp = p
+	draw_circle(lp, 4, color)
+	for p in next_points:
+		draw_line(lp, p, color)
+		lp = p

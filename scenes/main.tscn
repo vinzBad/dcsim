@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://scenes/main.gd" type="Script" id=1]
+[ext_resource path="res://nodes/devices/server/server.tscn" type="PackedScene" id=2]
+[ext_resource path="res://nodes/devices/router/router.tscn" type="PackedScene" id=3]
+[ext_resource path="res://nodes/devices/uplink/uplink.tscn" type="PackedScene" id=4]
+
+[sub_resource type="InputEventAction" id=1]
+action = "add_server"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[sub_resource type="InputEventAction" id=3]
+action = "add_router"
+
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
+
+[node name="main" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="gui" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="vbox" type="VBoxContainer" parent="gui"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="create_server" type="Button" parent="gui/vbox"]
+margin_right = 63.0
+margin_bottom = 20.0
+shortcut = SubResource( 2 )
+text = "SERVER"
+
+[node name="create_router" type="Button" parent="gui/vbox"]
+margin_top = 24.0
+margin_right = 63.0
+margin_bottom = 44.0
+shortcut = SubResource( 4 )
+text = "ROUTER"
+
+[node name="server" parent="gui/vbox/create_router" instance=ExtResource( 2 )]
+position = Vector2( 614.579, 213.158 )
+
+[node name="router" parent="gui/vbox/create_router" instance=ExtResource( 3 )]
+position = Vector2( 313.526, 207.895 )
+
+[node name="world" type="Node2D" parent="."]
+position = Vector2( 65.2632, 25.2632 )
+
+[node name="uplink" parent="world" instance=ExtResource( 4 )]
+position = Vector2( 371.421, 97.1579 )
+[connection signal="pressed" from="gui/vbox/create_server" to="." method="_on_create_server_pressed"]
+[connection signal="pressed" from="gui/vbox/create_router" to="." method="_on_create_router_pressed"]
