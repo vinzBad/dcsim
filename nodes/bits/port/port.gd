@@ -7,11 +7,17 @@ extends Node2D
 var color = Color.green
 var radius = 6
 var is_hovering = false
+var device:Device = null
 
 var connection = null
 var connected_port = null setget set_c, get_c
 var _c = null
+
 func set_c(c):
+	if c == null:
+		device.port_down(self, _c)
+	else:
+		device.port_up(self, c)
 	_c = c
 	update()
 
@@ -23,6 +29,9 @@ func _unhandled_input(event):
 		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
 			if event.pressed:
 				get_tree().call_group(g.NEEDS_PORT_CLICK, "on_port_click", self)
+
+func _ready():
+	device = get_parent().get_parent()
 
 
 func _process(delta):
@@ -41,6 +50,8 @@ func _draw():
 		
 	if _c and !is_hovering:
 		draw_circle(Vector2.ZERO, radius -2, Color.azure)
+	
+
 	
 
 		

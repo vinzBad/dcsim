@@ -11,3 +11,7 @@ margin_top = 4.21053
 margin_right = 49.2105
 margin_bottom = 18.2105
 text = "DEVICE"
+
+[node name="ports" type="Node2D" parent="."]
+
+[node name="services" type="Node2D" parent="."]

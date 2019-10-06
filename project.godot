@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "Device",
+"language": "GDScript",
+"path": "res://nodes/devices/device.gd"
+} ]
 _global_script_class_icons={
-
+"Device": ""
 }
 
 [application]

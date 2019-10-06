@@ -1,3 +1,4 @@
+tool
 extends Node2D
 
 # Declare member variables here. Examples:
@@ -24,13 +25,14 @@ func on_port_click(port:Node2D):
 			return
 			
 		port.connected_port = active_connection.port_start
+
 		active_connection.port_start.connected_port = port
 		port.connection = active_connection
 		active_connection.finish(port)
 		active_connection = null
 	else:
 		var c = g.connection.instance()
-		world.add_child(c)
+		world.add_child(c, true)
 		c.start(port)
 		port.connection = c
 		active_connection = c
@@ -59,14 +61,18 @@ func _input(event):
 		if event.pressed:
 			if active_device:
 				active_device.modulate = Color.white
+				remove_child(active_device)
+				world.add_child(active_device)
+				active_device.set_owner(world)
+				active_device.start()
 				active_device = null
 		
 		left_pressed = event.pressed
 				
 	if event is InputEventMouseMotion and left_pressed:
 		if not active_device and not active_connection:
-	        world.move_local_x(event.relative.x)
-	        world.move_local_y(event.relative.y)
+	        $camera.move_local_x(event.relative.x)
+	        $camera.move_local_y(event.relative.y)
 		
 	# when setting device stop input from propagating
 	if active_device:
@@ -81,6 +87,7 @@ func _process(delta):
 		
 
 
+
 func set_active_device(dev:Node2D):
 	if active_device:
 		active_device.queue_free()
@@ -88,10 +95,38 @@ func set_active_device(dev:Node2D):
 	
 func _on_create_server_pressed():
 	var dev = g.server.instance()
-	world.add_child(dev)
+	add_child(dev, true)
 	set_active_device(dev)	
 
 func _on_create_router_pressed():
 	var dev = g.router.instance()
-	world.add_child(dev)
+	add_child(dev, true)
 	set_active_device(dev)
+
+
+func _on_create_uplink_pressed():
+	var dev = g.uplink.instance()
+	add_child(dev, true)
+	set_active_device(dev)
+
+
+func _on_create_packet_pressed():
+	var uplinks = get_tree().get_nodes_in_group("UPLINK")
+	if len(uplinks) == 0:
+		return
+	var servers = get_tree().get_nodes_in_group("SERVER")
+	if len(servers) == 0:
+		return
+	
+	var server = servers[randi() % len(servers)]
+	var uplink = uplinks[randi() % len(uplinks)]
+	
+	var packet = g.packet.instance()
+	world.add_child(packet)
+	packet.start(uplink, server)
+	
+
+
+
+func _on_packet_timer_timeout():
+	_on_create_packet_pressed()

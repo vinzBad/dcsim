@@ -68,3 +68,33 @@ func _draw():
 	for p in next_points:
 		draw_line(lp, p, color)
 		lp = p
+		
+func save():
+	if is_active:
+		return {}
+	
+	var data = {
+		"points":[],
+		"port_start": port_start.get_path(),
+		"port_end": port_end.get_path()
+	}
+	for p in points:
+		data["points"].append({"pos_x":p.x, "pos_y":p.y})
+	return data
+	
+func load(data:Dictionary):
+	if data.empty():
+		queue_free()
+		
+	points.clear()	
+	for p in data["points"]:
+		points.append(Vector2(p["pos_x"], p["pos_y"]))
+		
+	port_start = get_node(data["port_start"])
+	port_end = get_node(data["port_end"])
+	
+	port_start.connection = self
+	port_start.connected_port = port_end
+	port_end.connection = self
+	port_end.connected_port = port_start
+	
