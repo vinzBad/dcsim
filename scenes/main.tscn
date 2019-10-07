@@ -75,7 +75,7 @@ text = "save"
 script = ExtResource( 2 )
 
 [node name="packet_timer" type="Timer" parent="."]
-wait_time = 0.25
+wait_time = 0.1
 autostart = true
 [connection signal="pressed" from="gui/vbox/create_server" to="." method="_on_create_server_pressed"]
 [connection signal="pressed" from="gui/vbox/create_router" to="." method="_on_create_router_pressed"]

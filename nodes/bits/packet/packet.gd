@@ -43,6 +43,10 @@ func fill_next():
 	
 	var next_device =  g.uid2device[path[path_index+1]]
 	var start_port = current_device.get_port_to_uid(next_device.uid)
+	if start_port == null:
+		queue_free()
+		return
+		
 	var connection = start_port.connection
 	self.global_position = start_port.global_position
 	next_points_index = 0
