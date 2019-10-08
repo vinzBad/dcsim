@@ -4,8 +4,13 @@
 
 [node name="device" type="Node2D"]
 script = ExtResource( 1 )
+hover_color = Color( 0.0980392, 0.156863, 0.156863, 1 )
 
-[node name="label" type="Label" parent="."]
+[node name="control" type="Control" parent="."]
+margin_right = 150.0
+margin_bottom = 50.0
+
+[node name="label" type="Label" parent="control"]
 margin_left = 4.21053
 margin_top = 4.21053
 margin_right = 49.2105
@@ -15,3 +20,5 @@ text = "DEVICE"
 [node name="ports" type="Node2D" parent="."]
 
 [node name="services" type="Node2D" parent="."]
+[connection signal="mouse_entered" from="control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="control" to="." method="_on_control_mouse_exited"]

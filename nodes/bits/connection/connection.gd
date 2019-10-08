@@ -47,11 +47,13 @@ func compute_next_points(target:Vector2):
 	var d = lp - target
 	
 	if d.x == 0 or d.y == 0:
-		next_points = [target]
+		next_points = [g.ridify(target, lp)]
 	elif abs(d.x) < abs(d.y):
-		next_points = [Vector2(lp.x, target.y), target]
+		var np = g.ridify(Vector2(lp.x, target.y), lp)
+		next_points = [np, g.ridify(target, np)]
 	else:
-		next_points = [Vector2(target.x, lp.y), target]
+		var np = g.ridify(Vector2(target.x, lp.y), lp)
+		next_points = [np, g.ridify(target, np)]
 
 func _process(delta):
 	if is_active:
@@ -60,11 +62,12 @@ func _process(delta):
 
 func _draw():
 	var lp = Vector2.ZERO
-	draw_circle(lp, 4, color)
+	#draw_circle(lp, 4, color)
 	for p in points:
 		draw_line(lp, p, color, 2)
 		lp = p
-	draw_circle(lp, 4, color)
+#	if !is_active:
+#		draw_circle(lp, 4, color)
 	for p in next_points:
 		draw_line(lp, p, color)
 		lp = p

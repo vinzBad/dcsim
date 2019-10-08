@@ -7,12 +7,14 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-export var width = 6 * 24
-export var height = 2 * 24
 export var color = Color.green
+export var hover_color = Color.black
+
 export var device_type = "DEVICE"
 
 onready var uid = g.get_uid()
+
+var is_hovering = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,12 +23,18 @@ func _ready():
 func start():
 	g.packet_nav.add_point(uid, Vector3(global_position.x, global_position.y, 0))
 	add_to_group(device_type)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
 func _draw():
-	draw_rect(Rect2(Vector2.ZERO, Vector2(width, height)), color, false)
+	var rect = Rect2($control.rect_position, $control.rect_size)
+	var height = rect.size.y
+	var width = rect.size.x
+	if is_hovering:
+		draw_rect(rect, hover_color, true)
+	draw_rect(rect, color, false)
 	for p in [Vector2.ZERO, Vector2(0, height), Vector2(width, 0), Vector2(width, height)]:
 		draw_circle(p, 4, color)
 
@@ -55,3 +63,12 @@ func save():
 func load(data):
 	start()
 	
+
+func _on_control_mouse_entered():
+	is_hovering = true
+	update()
+
+
+func _on_control_mouse_exited():
+	is_hovering = false
+	update()

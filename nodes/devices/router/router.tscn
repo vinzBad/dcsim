@@ -8,17 +8,17 @@
 ] instance=ExtResource( 1 )]
 device_type = "ROUTER"
 
-[node name="label" parent="." index="0"]
+[node name="label" parent="control" index="0"]
 text = "ROUTER"
 
 [node name="port1" parent="ports" index="0" instance=ExtResource( 2 )]
-position = Vector2( 14.5789, 35.0526 )
+position = Vector2( 15, 35 )
 
 [node name="port2" parent="ports" index="1" instance=ExtResource( 2 )]
-position = Vector2( 41.9474, 35.0526 )
+position = Vector2( 45, 35 )
 
 [node name="port3" parent="ports" index="2" instance=ExtResource( 2 )]
-position = Vector2( 73.5263, 34 )
+position = Vector2( 75, 35 )
 
 [node name="port4" parent="ports" index="3" instance=ExtResource( 2 )]
-position = Vector2( 107.211, 34 )
+position = Vector2( 105, 35 )

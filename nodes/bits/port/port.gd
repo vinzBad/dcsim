@@ -34,12 +34,11 @@ func _ready():
 	device = get_parent().get_parent()
 	
 
-
 func _draw():
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(2,2), rect.size - Vector2(4,4))
-	draw_rect(rect, color)
 	
+	draw_rect(rect, color)	
 	if !is_hovering :
 		draw_rect(hover_rect, Color.black)
 		

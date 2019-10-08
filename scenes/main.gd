@@ -71,8 +71,9 @@ func _input(event):
 				
 	if event is InputEventMouseMotion and left_pressed:
 		if not active_device and not active_connection:
-	        $camera.move_local_x(event.relative.x)
-	        $camera.move_local_y(event.relative.y)
+			$camera.move_local_x(event.relative.x)
+			$camera.move_local_y(event.relative.y)
+#			update()
 		
 	# when setting device stop input from propagating
 	if active_device:
@@ -82,11 +83,18 @@ func _input(event):
 				
 func _process(delta):	
 	if active_device:
-		active_device.global_position = get_global_mouse_position()
+		active_device.global_position = g.ridify(get_global_mouse_position())
 		active_device.modulate = Color.gray
 		
 
-
+#func _draw():
+#	var vw = $camera.get
+#	var p = Vector2.ZERO
+#	for x in range(vw.size.x/g.grid_size):
+#		for y in range(vw.size.y/g.grid_size):
+#			p = g.ridify(Vector2(x*g.grid_size + vw.position.x, y*g.grid_size+vw.position.y))
+#			draw_circle(p, 1, Color.blue)
+#
 
 func set_active_device(dev:Node2D):
 	if active_device:

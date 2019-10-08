@@ -4,13 +4,14 @@
 [ext_resource path="res://nodes/bits/port/port.tscn" type="PackedScene" id=2]
 
 [node name="uplink" instance=ExtResource( 1 )]
-width = 64
-height = 64
 color = Color( 0, 0.368627, 1, 1 )
 device_type = "UPLINK"
 
-[node name="label" parent="." index="0"]
-text = "UPLINK"
+[node name="control" parent="." index="0"]
+margin_right = 50.0
+
+[node name="label" parent="control" index="0"]
+text = "INTERNET"
 
 [node name="port" parent="ports" index="0" instance=ExtResource( 2 )]
-position = Vector2( 28.2632, 43.4737 )
+position = Vector2( 25, 35 )
