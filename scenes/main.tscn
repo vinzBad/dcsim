@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://scenes/world.gd" type="Script" id=2]
+[ext_resource path="res://scenes/vbox_device.gd" type="Script" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "add_server"
@@ -34,56 +35,69 @@ script = ExtResource( 2 )
 
 [node name="gui" type="CanvasLayer" parent="."]
 
-[node name="vbox" type="VBoxContainer" parent="gui"]
+[node name="vbox_buttons" type="VBoxContainer" parent="gui"]
 margin_right = 83.0
 margin_bottom = 140.0
 
-[node name="create_server" type="Button" parent="gui/vbox"]
+[node name="create_server" type="Button" parent="gui/vbox_buttons"]
 margin_right = 83.0
 margin_bottom = 20.0
 shortcut = SubResource( 2 )
 text = "SERVER (S)"
 
-[node name="create_router" type="Button" parent="gui/vbox"]
+[node name="create_router" type="Button" parent="gui/vbox_buttons"]
 margin_top = 24.0
 margin_right = 83.0
 margin_bottom = 44.0
 shortcut = SubResource( 4 )
 text = "ROUTER (R)"
 
-[node name="create_uplink" type="Button" parent="gui/vbox"]
+[node name="create_uplink" type="Button" parent="gui/vbox_buttons"]
 margin_top = 48.0
 margin_right = 83.0
 margin_bottom = 68.0
 shortcut = SubResource( 6 )
 text = "UPLINK (U)"
 
-[node name="create_packet" type="Button" parent="gui/vbox"]
+[node name="create_packet" type="Button" parent="gui/vbox_buttons"]
 margin_top = 72.0
 margin_right = 83.0
 margin_bottom = 92.0
 shortcut = SubResource( 4 )
 text = "PACKETS"
 
-[node name="load" type="Button" parent="gui/vbox"]
+[node name="load" type="Button" parent="gui/vbox_buttons"]
 margin_top = 96.0
 margin_right = 83.0
 margin_bottom = 116.0
 text = "load"
 
-[node name="save" type="Button" parent="gui/vbox"]
+[node name="save" type="Button" parent="gui/vbox_buttons"]
 margin_top = 120.0
 margin_right = 83.0
 margin_bottom = 140.0
 text = "save"
 
+[node name="vbox_device" type="VBoxContainer" parent="gui"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -40.0
+margin_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource( 3 )
+
+[node name="device_name" type="Label" parent="gui/vbox_device"]
+margin_right = 84.0
+margin_bottom = 14.0
+text = "device_name"
+
 [node name="packet_timer" type="Timer" parent="."]
 wait_time = 0.25
 autostart = true
-[connection signal="pressed" from="gui/vbox/create_server" to="." method="_on_create_server_pressed"]
-[connection signal="pressed" from="gui/vbox/create_router" to="." method="_on_create_router_pressed"]
-[connection signal="pressed" from="gui/vbox/create_uplink" to="." method="_on_create_uplink_pressed"]
-[connection signal="pressed" from="gui/vbox/create_packet" to="." method="_on_create_packet_pressed"]
-[connection signal="pressed" from="gui/vbox/load" to="world" method="_on_load_pressed"]
-[connection signal="pressed" from="gui/vbox/save" to="world" method="_on_save_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/create_server" to="." method="_on_create_server_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/create_router" to="." method="_on_create_router_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/create_uplink" to="." method="_on_create_uplink_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/create_packet" to="." method="_on_create_packet_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/load" to="world" method="_on_load_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/save" to="world" method="_on_save_pressed"]
 [connection signal="timeout" from="packet_timer" to="." method="_on_packet_timer_timeout"]

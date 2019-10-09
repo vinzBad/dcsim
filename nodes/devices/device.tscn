@@ -20,5 +20,6 @@ text = "DEVICE"
 [node name="ports" type="Node2D" parent="."]
 
 [node name="services" type="Node2D" parent="."]
+[connection signal="gui_input" from="control" to="." method="_on_control_gui_input"]
 [connection signal="mouse_entered" from="control" to="." method="_on_control_mouse_entered"]
 [connection signal="mouse_exited" from="control" to="." method="_on_control_mouse_exited"]

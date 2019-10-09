@@ -11,6 +11,7 @@ var packet = preload("res://nodes/bits/packet/packet.tscn")
 var grid_size = 10
 
 var NEEDS_PORT_CLICK = "NEEDS_PORT_CLICK"
+var NEEDS_DEVICE_CLICK = "NEEDS_DEVICE_CLICK"
 
 func ridify(vec:Vector2, align:Vector2=Vector2.INF):
 	if vec.x != align.x:

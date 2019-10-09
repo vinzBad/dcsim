@@ -14,6 +14,8 @@ export var device_type = "DEVICE"
 
 onready var uid = g.get_uid()
 
+onready var ports = $ports
+
 var is_hovering = false
 
 # Called when the node enters the scene tree for the first time.
@@ -72,3 +74,10 @@ func _on_control_mouse_entered():
 func _on_control_mouse_exited():
 	is_hovering = false
 	update()
+
+
+func _on_control_gui_input(event):
+	if is_hovering:
+		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+			if event.pressed:
+				get_tree().call_group(g.NEEDS_DEVICE_CLICK, "on_device_click", self)
