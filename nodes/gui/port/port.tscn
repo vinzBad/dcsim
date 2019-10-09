@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://nodes/gui/port/port_gui.gd" type="Script" id=1]
+
+[node name="port1" type="MarginContainer"]
+margin_right = 217.0
+margin_bottom = 80.0
+script = ExtResource( 1 )
+
+[node name="hbox" type="HBoxContainer" parent="."]
+margin_right = 217.0
+margin_bottom = 80.0
+
+[node name="spacer" type="Control" parent="hbox"]
+margin_right = 40.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 40, 0 )
+
+[node name="margin" type="MarginContainer" parent="hbox"]
+margin_left = 44.0
+margin_right = 217.0
+margin_bottom = 80.0
+
+[node name="panel" type="Panel" parent="hbox/margin"]
+modulate = Color( 0.152941, 0.784314, 1, 1 )
+margin_right = 173.0
+margin_bottom = 80.0
+
+[node name="vbox" type="VBoxContainer" parent="hbox/margin"]
+margin_right = 173.0
+margin_bottom = 80.0
+alignment = 2
+
+[node name="port_name" type="Label" parent="hbox/margin/vbox"]
+margin_right = 173.0
+margin_bottom = 14.0
+text = "port_name -> device_name"
+
+[node name="port_state" type="Label" parent="hbox/margin/vbox"]
+margin_top = 18.0
+margin_right = 173.0
+margin_bottom = 32.0
+text = "10 p/s"
+align = 2
+
+[node name="up_down" type="Button" parent="hbox/margin/vbox"]
+margin_top = 36.0
+margin_right = 173.0
+margin_bottom = 56.0
+text = "shutdown"
+
+[node name="disconnect" type="Button" parent="hbox/margin/vbox"]
+margin_top = 60.0
+margin_right = 173.0
+margin_bottom = 80.0
+text = "disconnect"

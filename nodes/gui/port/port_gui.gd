@@ -1,15 +1,15 @@
-extends VBoxContainer
+extends MarginContainer
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
 
+onready var port_name = $hbox/margin/vbox/port_name
+onready var port_state = $hbox/margin/vbox/port_state
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	add_to_group(g.NEEDS_DEVICE_CLICK)
-	
-func on_device_click(device:Device):
-	$device_name.text = device.device_type
+	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

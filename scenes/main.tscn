@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://scenes/world.gd" type="Script" id=2]
-[ext_resource path="res://scenes/vbox_device.gd" type="Script" id=3]
+[ext_resource path="res://nodes/gui/vbox_device/vbox_device.tscn" type="PackedScene" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "add_server"
@@ -78,18 +78,7 @@ margin_right = 83.0
 margin_bottom = 140.0
 text = "save"
 
-[node name="vbox_device" type="VBoxContainer" parent="gui"]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -40.0
-margin_bottom = 40.0
-grow_horizontal = 0
-script = ExtResource( 3 )
-
-[node name="device_name" type="Label" parent="gui/vbox_device"]
-margin_right = 84.0
-margin_bottom = 14.0
-text = "device_name"
+[node name="vbox_device" parent="gui" instance=ExtResource( 3 )]
 
 [node name="packet_timer" type="Timer" parent="."]
 wait_time = 0.25

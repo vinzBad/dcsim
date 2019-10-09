@@ -13,6 +13,8 @@ var grid_size = 10
 var NEEDS_PORT_CLICK = "NEEDS_PORT_CLICK"
 var NEEDS_DEVICE_CLICK = "NEEDS_DEVICE_CLICK"
 
+var selected_device:Device = null
+
 func ridify(vec:Vector2, align:Vector2=Vector2.INF):
 	if vec.x != align.x:
 		vec.x = int(vec.x / grid_size) * grid_size

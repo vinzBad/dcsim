@@ -9,6 +9,7 @@ extends Node2D
 
 export var color = Color.green
 export var hover_color = Color.black
+export var select_color = Color.white
 
 export var device_type = "DEVICE"
 
@@ -17,6 +18,7 @@ onready var uid = g.get_uid()
 onready var ports = $ports
 
 var is_hovering = false
+var is_selected = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +38,9 @@ func _draw():
 	var width = rect.size.x
 	if is_hovering:
 		draw_rect(rect, hover_color, true)
+	elif is_selected:
+		draw_rect(rect, select_color, true)
+	
 	draw_rect(rect, color, false)
 	for p in [Vector2.ZERO, Vector2(0, height), Vector2(width, 0), Vector2(width, height)]:
 		draw_circle(p, 4, color)
@@ -81,3 +86,9 @@ func _on_control_gui_input(event):
 		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
 			if event.pressed:
 				get_tree().call_group(g.NEEDS_DEVICE_CLICK, "on_device_click", self)
+				is_selected = true
+				update()
+				if g.selected_device:
+					g.selected_device.is_selected = false
+					g.selected_device.update()
+				g.selected_device = self
