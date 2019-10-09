@@ -6,6 +6,9 @@
 [node name="server" instance=ExtResource( 1 )]
 device_type = "SERVER"
 
+[node name="control" parent="." index="0"]
+margin_bottom = 60.0
+
 [node name="label" parent="control" index="0"]
 text = "SERVER"
 

@@ -4,11 +4,11 @@
 
 [node name="device" type="Node2D"]
 script = ExtResource( 1 )
-hover_color = Color( 0.0980392, 0.156863, 0.156863, 1 )
+hover_color = Color( 0.180392, 0.329412, 0.329412, 1 )
 
 [node name="control" type="Control" parent="."]
 margin_right = 150.0
-margin_bottom = 50.0
+margin_bottom = 60.0
 
 [node name="label" type="Label" parent="control"]
 margin_left = 4.21053
