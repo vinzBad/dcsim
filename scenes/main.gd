@@ -11,6 +11,7 @@ var active_device = null
 var left_pressed = false
 
 onready var world = $world
+onready var camera = $camera
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -71,8 +72,8 @@ func _input(event):
 				
 	if event is InputEventMouseMotion and left_pressed:
 		if not active_device and not active_connection:
-			$camera.move_local_x(event.relative.x)
-			$camera.move_local_y(event.relative.y)
+			camera.move_local_x(event.relative.x)
+			camera.move_local_y(event.relative.y)
 #			update()
 		
 	# when setting device stop input from propagating

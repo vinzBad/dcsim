@@ -8,10 +8,10 @@ color = Color( 0, 0.368627, 1, 1 )
 device_type = "UPLINK"
 
 [node name="control" parent="." index="0"]
-margin_right = 50.0
+margin_bottom = 30.0
 
 [node name="label" parent="control" index="0"]
 text = "INTERNET"
 
 [node name="port" parent="ports" index="0" instance=ExtResource( 2 )]
-position = Vector2( 25, 35 )
+position = Vector2( 125, 15 )
