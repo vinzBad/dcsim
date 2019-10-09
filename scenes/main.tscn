@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://scenes/world.gd" type="Script" id=2]
-[ext_resource path="res://nodes/gui/vbox_device/vbox_device.tscn" type="PackedScene" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "add_server"
@@ -78,7 +77,24 @@ margin_right = 83.0
 margin_bottom = 140.0
 text = "save"
 
-[node name="vbox_device" parent="gui" instance=ExtResource( 3 )]
+[node name="clear" type="Button" parent="gui/vbox_buttons"]
+margin_top = 144.0
+margin_right = 83.0
+margin_bottom = 164.0
+text = "clear"
+
+[node name="desc" type="Label" parent="gui"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -436.559
+margin_top = 6.1387
+margin_right = -2.55945
+margin_bottom = 88.1387
+text = "Click one of the Buttons or press a key to place a device
+Connect devices by clicking on ports.
+You can click while placing connections to add another control point
+PACKETS will flow from UPLINKs through ROUTERS to SERVERs
+"
 
 [node name="packet_timer" type="Timer" parent="."]
 wait_time = 0.25
@@ -89,4 +105,5 @@ autostart = true
 [connection signal="pressed" from="gui/vbox_buttons/create_packet" to="." method="_on_create_packet_pressed"]
 [connection signal="pressed" from="gui/vbox_buttons/load" to="world" method="_on_load_pressed"]
 [connection signal="pressed" from="gui/vbox_buttons/save" to="world" method="_on_save_pressed"]
+[connection signal="pressed" from="gui/vbox_buttons/clear" to="." method="_on_clear_pressed"]
 [connection signal="timeout" from="packet_timer" to="." method="_on_packet_timer_timeout"]

@@ -139,3 +139,8 @@ func _on_create_packet_pressed():
 
 func _on_packet_timer_timeout():
 	_on_create_packet_pressed()
+
+
+func _on_clear_pressed():
+	for child in world.get_children():
+		child.queue_free()
