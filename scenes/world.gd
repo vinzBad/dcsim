@@ -8,7 +8,13 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_save()
-	
+
+func reset():
+	g.packet_nav = AStar.new()
+	for child in get_children():
+		child.queue_free()
+
+
 func save():
 	var save_game = File.new()
 	save_game.open("user://savegame.save", File.WRITE)
@@ -29,8 +35,8 @@ func save():
 	
 func load_save():
 	
-	for child in get_children():
-		child.queue_free()
+	reset()
+	
 	# wait for children to be freed
 	yield(get_tree(), "idle_frame")
 	
