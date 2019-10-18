@@ -6,6 +6,7 @@ onready var camera:Camera2D = get_node(camera_path)
 enum {IDLE, PLACING, CONNECTING}
 var device:Device
 var selected_device:Device
+var selected_port:Port
 var connection:Connection
 var state = IDLE
 var file_names = []
@@ -14,12 +15,16 @@ var is_dragging = false
 onready var file_select:OptionButton = $hbox/margin_buttons/vbox_buttons/file
 onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
 
+onready var device_view =  $hbox_device
+onready var device_view_hostname =  $hbox_device/values/hostname
+onready var device_view_port =  $hbox_device/values/port
 
 func _ready():
 	md.connect_message(g.ERROR, self, "_handler")
 	md.connect_message(g.SITE_NAME_CHANGE, self, "_handler")
 	md.connect_message(g.SELECT_DEVICE, self, "_handler")
 	md.connect_message(g.SELECT_PORT, self, "_handler")
+	md.connect_message(g.RESET, self, "_handler")
 	_set_file_options()
 	
 func _process(delta):
@@ -32,6 +37,7 @@ func handle_placing():
 func _input(event):
 	if event.is_action_pressed("gui_cancel"):
 		select_device(null)
+		select_port(null)
 		if state == PLACING:
 			get_parent().remove_child(device)
 			device.queue_free()
@@ -41,6 +47,7 @@ func _input(event):
 		if state == CONNECTING:
 			get_parent().remove_child(connection)
 			connection.queue_free()
+			connection.port_start.connection = null
 			connection = null
 			state = IDLE
 		
@@ -62,13 +69,40 @@ func _input(event):
 		camera.move_local_y(event.relative.y * 2)
 
 func select_device(device):
-	if selected_device:
+	device_view.visible = false
+
+	if selected_device != null:
 		selected_device.is_selected = false
 		selected_device.update()
 	if device:
 		selected_device = device
 		selected_device.is_selected = true
 		selected_device.update()
+		
+		device_view_hostname.text = device.hostname
+		device_view.visible = true
+		device_view.hide()
+		device_view.show()
+		
+func select_port(port):
+	device_view_port.visible = false
+	
+	if selected_port:
+		select_device(null)
+		selected_port.is_selected = false
+		selected_port.update()
+	
+	if port:
+		selected_port = port
+		selected_port.is_selected = true
+		selected_port.update()		
+		device_view_port.text = port.port_name
+		device_view_port.visible = true
+		device_view_port.hide()
+		device_view_port.show()
+		
+		select_device(port.device)
+	
 		
 func start_connecting(port):
 	state = CONNECTING
@@ -117,6 +151,16 @@ func remove_connection(conn):
 	conn.queue_free()
 
 func _handler(type, msg):
+	if type == g.RESET:
+		if device:
+			device.queue_free()
+		device = null
+		selected_device = null
+		selected_port = null
+		if connection:
+			connection.queue_free()
+		state = IDLE
+
 	if type == g.ERROR:
 		print("%s: %s" % [type, msg["error"]])
 	elif type == g.SITE_NAME_CHANGE:
@@ -124,8 +168,11 @@ func _handler(type, msg):
 	elif type == g.SELECT_DEVICE and state == IDLE:
 		select_device(msg["device"])
 	elif type == g.SELECT_PORT and state == IDLE:
-		start_connecting(msg["port"])	
+		select_port(msg["port"])
+#		if msg["port"].connection == null:
+		start_connecting(msg["port"])
 	elif type == g.SELECT_PORT and state == CONNECTING:
+		select_port(msg["port"])
 		finish_connecting(msg["port"])
 
 func _set_file_options():
@@ -152,7 +199,9 @@ func _on_save_pressed():
 func _on_load_pressed():
 	var file = null
 	if file_select.selected > -1:
-		file = file_names[file_select.selected]	
+		file = file_names[file_select.selected]
+	
+	md.emit_message(g.RESET, {})
 	md.emit_message(g.LOAD, {"file": file})
 
 

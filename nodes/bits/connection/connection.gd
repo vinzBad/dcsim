@@ -106,4 +106,3 @@ func load_from_save(data:Dictionary):
 	port_start.connected_port = port_end
 	port_end.connection = self
 	port_end.connected_port = port_start
-	

@@ -121,6 +121,8 @@ func load_from_save(data:Dictionary):
 		p.register()
 	
 	start()
+	yield(get_tree(), "idle_frame")
+	self.set_name(hostname)
 	
 	
 func _on_control_mouse_entered():

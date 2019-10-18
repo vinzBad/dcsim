@@ -6,6 +6,7 @@ class_name Port
 # var b = "text"
 var color = Color.green
 var is_hovering = false
+var is_selected = false
 var device:Device = null
 
 var connection = null
@@ -24,25 +25,29 @@ func set_c(c):
 func get_c():
 	return _c
 
-func _unhandled_input(event):
-	if is_hovering:
-		if event.is_action_pressed("gui_select_device"):
-			md.emit_message(g.SELECT_PORT, {"port": self})
 
 func register():
 	g.register_port(device, self)
+	yield(get_tree(), "idle_frame")
+	self.set_name(port_name)
 
 func _draw():
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(2,2), rect.size - Vector2(4,4))
+	var select_rect = Rect2(rect.position - Vector2(2,2), rect.size + Vector2(4,4))
+	
+	if is_selected:
+		draw_rect(select_rect, Color.gold)
 	
 	draw_rect(rect, color)	
-	if !is_hovering :
-		draw_rect(hover_rect, Color.black)
-		
-	if _c and !is_hovering:
-		draw_rect(hover_rect, Color.azure)
+	draw_rect(hover_rect, Color.black)
 	
+	if _c:
+		draw_rect(hover_rect, Color.azure)
+		
+	if is_hovering:
+		draw_rect(hover_rect, color)	
+
 
 func _on_control_mouse_entered():
 	is_hovering = true
@@ -53,4 +58,6 @@ func _on_control_mouse_exited():
 	update()
 
 func _on_control_gui_input(event):
-	_unhandled_input(event)
+	if is_hovering:
+		if event.is_action_pressed("gui_select_device"):
+			md.emit_message(g.SELECT_PORT, {"port": self})
