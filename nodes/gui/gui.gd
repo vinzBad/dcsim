@@ -27,6 +27,8 @@ func _ready():
 	md.connect_message(g.RESET, self, "_handler")
 	_set_file_options()
 	
+	device_view.visible = false
+	
 func _process(delta):
 	if state == PLACING:
 		handle_placing()
@@ -135,7 +137,9 @@ func finish_connecting(port):
 	state = IDLE
 
 func start_placing(device_type):
-	state = PLACING		
+	state = PLACING
+	if device:
+		device.queue_free()
 	device = g.device.instance()
 	get_parent().add_child(device)
 	device.init_from_def(g.defs[device_type])
@@ -210,20 +214,20 @@ func _on_reset_pressed():
 
 
 func _on_uplink_pressed():
-	if state == IDLE:
+	if state == IDLE or state == PLACING:
 		start_placing("uplink")
 
 
 func _on_router_pressed():
-	if state == IDLE:
+	if state == IDLE or state == PLACING:
 		start_placing("router")
 	#
 
 func _on_switch_pressed():
-	if state == IDLE:
+	if state == IDLE or state == PLACING:
 		start_placing("switch")
 
 
 func _on_server_pressed():
-	if state == IDLE:
+	if state == IDLE or state == PLACING:
 		start_placing("server")
