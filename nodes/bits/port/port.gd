@@ -1,6 +1,6 @@
 tool
 extends Node2D
-
+class_name Port
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -11,7 +11,7 @@ var device:Device = null
 var connection = null
 var connected_port = null setget set_c, get_c
 var _c = null
-
+var port_name = ""
 
 func set_c(c):
 	if c == null:
@@ -26,13 +26,11 @@ func get_c():
 
 func _unhandled_input(event):
 	if is_hovering:
-		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
-			if event.pressed:
-				get_tree().call_group(g.NEEDS_PORT_CLICK, "on_port_click", self)
+		if event.is_action_pressed("gui_select_device"):
+			md.emit_message(g.SELECT_PORT, {"port": self})
 
-func _ready():
-	device = get_parent().get_parent()
-	
+func register():
+	g.register_port(device, self)
 
 func _draw():
 	var rect = Rect2($control.rect_position, $control.rect_size)

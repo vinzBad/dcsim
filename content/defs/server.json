@@ -1,0 +1,19 @@
+{
+    "class": "device",
+    "device_type": "server",
+    "hostname_format": "srv-%s",
+    "height": 1,
+    "ports": [
+        {
+            "name": "nic-1",
+            "x": 11,
+            "y": 1.5
+        },
+        {
+            "name": "nic-2",
+            "x": 13,
+            "y": 1.5
+        }
+
+    ]
+}

@@ -1,5 +1,5 @@
 extends Node2D
-
+class_name Connection
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -78,23 +78,29 @@ func save():
 	
 	var data = {
 		"points":[],
-		"port_start": port_start.get_path(),
-		"port_end": port_end.get_path()
+		"port_start": {
+			"hostname": port_start.device.hostname,
+			"port_name": port_start.port_name
+		},
+		"port_end": {
+			"hostname": port_end.device.hostname,
+			"port_name": port_end.port_name
+		}
 	}
 	for p in points:
 		data["points"].append({"pos_x":p.x, "pos_y":p.y})
 	return data
 	
-func load(data:Dictionary):
+func load_from_save(data:Dictionary):
 	if data.empty():
-		queue_free()
-		
-	points.clear()	
+		queue_free()		
+	points.clear()
+	
 	for p in data["points"]:
 		points.append(Vector2(p["pos_x"], p["pos_y"]))
 		
-	port_start = get_node(data["port_start"])
-	port_end = get_node(data["port_end"])
+	port_start = g.find_port(data["port_start"]["hostname"], data["port_start"]["port_name"])
+	port_end = g.find_port(data["port_end"]["hostname"], data["port_end"]["port_name"])
 	
 	port_start.connection = self
 	port_start.connected_port = port_end
