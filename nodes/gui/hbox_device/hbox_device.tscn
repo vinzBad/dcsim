@@ -19,12 +19,12 @@ margin_right = 82.0
 margin_bottom = 20.0
 text = "host: "
 
-[node name="poweroff" type="Button" parent="labels"]
+[node name="move" type="Button" parent="labels"]
 margin_top = 24.0
 margin_right = 82.0
 margin_bottom = 50.0
 hint_tooltip = "poweroff device"
-text = "off"
+text = "move"
 
 [node name="port" type="Label" parent="labels"]
 margin_top = 54.0
@@ -47,38 +47,38 @@ text = "disable"
 
 [node name="values" type="VBoxContainer" parent="."]
 margin_left = 86.0
-margin_right = 118.0
+margin_right = 198.0
 margin_bottom = 128.0
 
 [node name="hostname" type="Label" parent="values"]
-margin_right = 32.0
+margin_right = 112.0
 margin_bottom = 20.0
 text = "   "
 
 [node name="remove" type="Button" parent="values"]
 margin_top = 24.0
-margin_right = 32.0
+margin_right = 112.0
 margin_bottom = 50.0
 hint_tooltip = "remove device"
-text = "rm"
+text = "remove"
 
 [node name="port" type="Label" parent="values"]
 margin_top = 54.0
-margin_right = 32.0
+margin_right = 112.0
 margin_bottom = 74.0
 
 [node name="port_state" type="Label" parent="values"]
 margin_top = 78.0
-margin_right = 32.0
+margin_right = 112.0
 margin_bottom = 98.0
 
 [node name="disconnect" type="Button" parent="values"]
 margin_top = 102.0
-margin_right = 32.0
+margin_right = 112.0
 margin_bottom = 128.0
 hint_tooltip = "disconnect port"
-text = "dc"
-[connection signal="pressed" from="labels/poweroff" to="." method="_on_poweroff_pressed"]
+text = "disconnect"
+[connection signal="pressed" from="labels/move" to="." method="_on_move_pressed"]
 [connection signal="pressed" from="labels/disable" to="." method="_on_down_pressed"]
 [connection signal="pressed" from="values/remove" to="." method="_on_remove_pressed"]
 [connection signal="pressed" from="values/disconnect" to="." method="_on_disconnect_pressed"]

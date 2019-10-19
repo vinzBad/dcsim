@@ -73,6 +73,13 @@ func port_down(my_port):
 		if g.packet_nav.are_points_connected(uid, other_port.device.uid):
 			g.packet_nav.disconnect_points(uid, other_port.device.uid)
 
+func remove():
+	self.stop()
+	for port in ports.get_children():
+		if port._conn:
+			port._conn.remove()
+	self.queue_free()
+
 func save():
 	var data = {
 		"hostname": self.hostname,
@@ -96,7 +103,12 @@ func save():
 func register():
 	g.uid2device[uid] = self
 	g.hostname2device[hostname] = self
-
+	
+func is_moveable():
+	for port in ports.get_children():
+		if port.state == Port.UP:
+			return false
+	return true
 
 func init_from_def(def):
 	def["hostname"] = g.get_hostname(def)

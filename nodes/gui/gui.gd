@@ -23,6 +23,8 @@ func _ready():
 	md.connect_message(g.SELECT_DEVICE, self, "_handler")
 	md.connect_message(g.SELECT_PORT, self, "_handler")
 	md.connect_message(g.RESET, self, "_handler")
+	md.connect_message(g.MOVE_DEVICE, self, "_handler")
+	md.connect_message(g.REMOVE_DEVICE, self, "_handler")
 	_set_file_options()
 	
 	device_view.visible = false
@@ -78,8 +80,8 @@ func select_device(device):
 		selected_device = device
 		selected_device.is_selected = true
 		selected_device.update()
-		
-		
+		if selected_port and selected_port.device != selected_device:
+			select_port(null) # this is so ugly
 		device_view.visible = true
 		device_view.hide()
 		device_view.show()
@@ -96,8 +98,8 @@ func select_port(port):
 		selected_port = port
 		selected_port.is_selected = true
 		selected_port.update()		
-		
-		select_device(port.device)
+		if port.device != selected_device:
+			select_device(port.device)
 	
 		
 func start_connecting(port):
@@ -121,6 +123,8 @@ func finish_connecting(port):
 	
 	connection = null
 	state = IDLE
+	
+	device_view.update_button_labels()
 
 func start_placing(device_type):
 	state = PLACING
@@ -156,6 +160,23 @@ func _handler(type, msg):
 	elif type == g.SELECT_PORT and state == CONNECTING:
 		select_port(msg["port"])
 		finish_connecting(msg["port"])
+	elif type == g.MOVE_DEVICE:
+		select_device(null)
+		select_port(null)
+		state = PLACING
+		device = msg["device"]
+		device.is_active = false
+		var owner = device.get_parent()
+		owner.remove_child(device)
+		device.set_owner(get_parent())
+		get_parent().add_child(device)
+	elif type == g.REMOVE_DEVICE:
+		if msg["device"] == selected_device:
+			selected_device = null
+			selected_port = null
+			select_device(null)
+			select_port(null)
+		msg["device"].remove()
 
 func _set_file_options():
 	file_names.clear()

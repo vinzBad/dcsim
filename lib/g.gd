@@ -17,6 +17,8 @@ const SELECT_DEVICE = "SELECT_DEVICE"
 const SELECT_PORT = "SELECT_PORT"
 const PORT_STATUS = "PORT_STATUS"
 const CONN_STATUS = "CONN_STATUS"
+const MOVE_DEVICE = "MOVE_DEVICE"
+const REMOVE_DEVICE = "REMOVE_DEVICE"
 
 ## Preloads
 var device = preload("res://nodes/devices/device.tscn")
