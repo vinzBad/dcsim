@@ -16,8 +16,6 @@ onready var file_select:OptionButton = $hbox/margin_buttons/vbox_buttons/file
 onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
 
 onready var device_view =  $hbox_device
-onready var device_view_hostname =  $hbox_device/values/hostname
-onready var device_view_port =  $hbox_device/values/port
 
 func _ready():
 	md.connect_message(g.ERROR, self, "_handler")
@@ -72,7 +70,7 @@ func _input(event):
 
 func select_device(device):
 	device_view.visible = false
-
+	device_view.set_device(device)
 	if selected_device != null:
 		selected_device.is_selected = false
 		selected_device.update()
@@ -81,13 +79,13 @@ func select_device(device):
 		selected_device.is_selected = true
 		selected_device.update()
 		
-		device_view_hostname.text = device.hostname
+		
 		device_view.visible = true
 		device_view.hide()
 		device_view.show()
 		
 func select_port(port):
-	device_view_port.visible = false
+	device_view.set_port(port)
 	
 	if selected_port:
 		select_device(null)
@@ -98,10 +96,6 @@ func select_port(port):
 		selected_port = port
 		selected_port.is_selected = true
 		selected_port.update()		
-		device_view_port.text = port.port_name
-		device_view_port.visible = true
-		device_view_port.hide()
-		device_view_port.show()
 		
 		select_device(port.device)
 	
@@ -173,8 +167,8 @@ func _handler(type, msg):
 		select_device(msg["device"])
 	elif type == g.SELECT_PORT and state == IDLE:
 		select_port(msg["port"])
-#		if msg["port"].connection == null:
-		start_connecting(msg["port"])
+		if msg["port"].connection == null:
+			start_connecting(msg["port"])
 	elif type == g.SELECT_PORT and state == CONNECTING:
 		select_port(msg["port"])
 		finish_connecting(msg["port"])

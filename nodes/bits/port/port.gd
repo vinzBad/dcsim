@@ -42,9 +42,10 @@ func _draw():
 	draw_rect(rect, color)	
 	draw_rect(hover_rect, Color.black)
 	
+	if connection:
+		draw_rect(hover_rect, Color.gray)
 	if _c:
 		draw_rect(hover_rect, Color.azure)
-		
 	if is_hovering:
 		draw_rect(hover_rect, color)	
 
