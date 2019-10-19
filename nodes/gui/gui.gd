@@ -47,9 +47,7 @@ func _input(event):
 			state = IDLE
 		if state == CONNECTING:
 			get_parent().remove_child(connection)
-			connection.queue_free()
-			connection.port_start.connection = null
-			connection.port_start.update()
+			connection.remove()
 			connection = null
 			state = IDLE
 		
@@ -104,11 +102,9 @@ func select_port(port):
 		
 func start_connecting(port):
 	state = CONNECTING
-	if port.connected_port:
-		remove_connection(port.connection)
+
 	connection = g.connection.instance()
 	connection.start(port)
-	port.connection = connection
 	get_parent().add_child(connection)
 	
 func finish_connecting(port):
@@ -118,13 +114,7 @@ func finish_connecting(port):
 	if connection.port_start.device == port.device:
 		return
 	
-	if port.connected_port:
-		remove_connection(port.connection)
-	
 	connection.finish(port)
-	port.connection = connection
-	connection.port_start.connected_port = port
-	port.connected_port = connection.port_start
 	
 	get_parent().remove_child(connection)	
 	md.emit_message(g.ADD_CONNECTION, {"connection":connection})
@@ -141,14 +131,6 @@ func start_placing(device_type):
 	device.init_from_def(g.defs[device_type])
 	
 
-func remove_connection(conn):
-	if conn.port_start:
-		conn.port_start.connected_port = null
-		conn.port_start.connection = null
-	if conn.port_end:
-		conn.port_end.connected_port = null
-		conn.port_end.connection = null
-	conn.queue_free()
 
 func _handler(type, msg):
 	if type == g.RESET:
@@ -169,7 +151,7 @@ func _handler(type, msg):
 		select_device(msg["device"])
 	elif type == g.SELECT_PORT and state == IDLE:
 		select_port(msg["port"])
-		if msg["port"].connection == null:
+		if !msg["port"].has_conn():
 			start_connecting(msg["port"])
 	elif type == g.SELECT_PORT and state == CONNECTING:
 		select_port(msg["port"])

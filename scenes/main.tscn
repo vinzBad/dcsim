@@ -40,48 +40,48 @@ margin_right = 83.0
 margin_bottom = 140.0
 
 [node name="create_server" type="Button" parent="gui/vbox_buttons"]
-margin_right = 83.0
-margin_bottom = 20.0
+margin_right = 112.0
+margin_bottom = 26.0
 shortcut = SubResource( 2 )
 text = "SERVER (S)"
 
 [node name="create_router" type="Button" parent="gui/vbox_buttons"]
-margin_top = 24.0
-margin_right = 83.0
-margin_bottom = 44.0
+margin_top = 30.0
+margin_right = 112.0
+margin_bottom = 56.0
 shortcut = SubResource( 4 )
 text = "ROUTER (R)"
 
 [node name="create_uplink" type="Button" parent="gui/vbox_buttons"]
-margin_top = 48.0
-margin_right = 83.0
-margin_bottom = 68.0
+margin_top = 60.0
+margin_right = 112.0
+margin_bottom = 86.0
 shortcut = SubResource( 6 )
 text = "UPLINK (U)"
 
 [node name="create_packet" type="Button" parent="gui/vbox_buttons"]
-margin_top = 72.0
-margin_right = 83.0
-margin_bottom = 92.0
+margin_top = 90.0
+margin_right = 112.0
+margin_bottom = 116.0
 shortcut = SubResource( 4 )
 text = "PACKETS"
 
 [node name="load" type="Button" parent="gui/vbox_buttons"]
-margin_top = 96.0
-margin_right = 83.0
-margin_bottom = 116.0
+margin_top = 120.0
+margin_right = 112.0
+margin_bottom = 146.0
 text = "load"
 
 [node name="save" type="Button" parent="gui/vbox_buttons"]
-margin_top = 120.0
-margin_right = 83.0
-margin_bottom = 140.0
+margin_top = 150.0
+margin_right = 112.0
+margin_bottom = 176.0
 text = "save"
 
 [node name="clear" type="Button" parent="gui/vbox_buttons"]
-margin_top = 144.0
-margin_right = 83.0
-margin_bottom = 164.0
+margin_top = 180.0
+margin_right = 112.0
+margin_bottom = 206.0
 text = "clear"
 
 [node name="desc" type="Label" parent="gui"]

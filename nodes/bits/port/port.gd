@@ -1,30 +1,76 @@
 tool
 extends Node2D
 class_name Port
+
+enum {UP, DOWN, DISABLED}
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
 var color = Color.green
-var is_hovering = false
-var is_selected = false
-var device:Device = null
-
-var connection = null
-var connected_port = null setget set_c, get_c
-var _c = null
 var port_name = ""
 
-func set_c(c):
-	if c == null:
-		device.port_down(self, _c)
-	else:
-		device.port_up(self, c)
-	_c = c
+var is_hovering = false
+var is_selected = false
+var device = null
+var state = DOWN
+
+var _conn: Connection
+
+func other_port():
+	if _conn:
+		return _conn.other_port(self)
+	return null
+
+func set_conn(conn:Connection):
+	remove_conn()
+	self._conn = conn
+	
+	var other = other_port()
+	if other != null and other.state != DISABLED and self.state != DISABLED:
+		state = UP		
+		device.port_up(self)
+		other.state = UP
+		other.device.port_up(other)
+		other.update()
 	update()
 
-func get_c():
-	return _c
+func remove_conn():
+	if !_conn:
+		return
+	_conn = null
+	if state == UP:
+		state = DOWN
+		device.port_down(self)
+	update()
+	
+func disable():
+	if state == DISABLED:
+		return
+	state = DISABLED
+	var other = other_port()
+	if other != null and other.state == UP:
+		other.state = DOWN
+		other.device.port_down(other)
+		other.update()
+	update()
 
+func enable():
+	if state != DISABLED:
+		return
+	
+	var other = other_port()
+	if other != null and other.state != DISABLED:
+		state = UP
+		device.port_up(self)
+		other.state = UP
+		other.device.port_up(other)
+		other.update()
+	else:
+		state = DOWN
+	update()
+	
+func has_conn():
+	return _conn != null
 
 func register():
 	g.register_port(device, self)
@@ -35,19 +81,27 @@ func _draw():
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(2,2), rect.size - Vector2(4,4))
 	var select_rect = Rect2(rect.position - Vector2(2,2), rect.size + Vector2(4,4))
-	
+	var conn_rect = Rect2(rect.position + Vector2(5,5), rect.size - Vector2(10,10))
 	if is_selected:
 		draw_rect(select_rect, Color.gold)
 	
 	draw_rect(rect, color)	
 	draw_rect(hover_rect, Color.black)
 	
-	if connection:
-		draw_rect(hover_rect, Color.gray)
-	if _c:
+	if _conn:
+		draw_rect(conn_rect, Color.azure)
+	
+	if state == DISABLED:
+		draw_rect(hover_rect, Color.darkgray)
+	
+	if state == UP:
 		draw_rect(hover_rect, Color.azure)
+	
 	if is_hovering:
 		draw_rect(hover_rect, color)	
+
+func state_as_string():
+	return {UP:"Up", DOWN:"Down", DISABLED:"Disabled"}.get(state)
 
 
 func _on_control_mouse_entered():

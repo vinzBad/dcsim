@@ -62,11 +62,13 @@ func get_port_to_uid(uid):
 				return port
 	return null
 
-func port_up(my_port, other_port):
+func port_up(my_port):
+	var other_port = my_port.other_port()
 	if !g.packet_nav.are_points_connected(uid, other_port.device.uid):
 		g.packet_nav.connect_points(uid, other_port.device.uid)
 
-func port_down(my_port, other_port):
+func port_down(my_port):
+	var other_port = my_port.other_port()
 	if other_port != null:
 		if g.packet_nav.are_points_connected(uid, other_port.device.uid):
 			g.packet_nav.disconnect_points(uid, other_port.device.uid)
@@ -81,10 +83,12 @@ func save():
 	}
 	
 	for port in ports.get_children():
+		var is_disabled = (port.state == Port.DISABLED)
 		data["ports"].append({
 			"pos_x": port.position.x,
 			"pos_y": port.position.y,
-			"name": port.port_name
+			"name": port.port_name,
+			"is_disabled": is_disabled
 		})
 	
 	return data
@@ -118,6 +122,8 @@ func load_from_save(data:Dictionary):
 		p.position = Vector2(pd["pos_x"], pd["pos_y"])
 		p.port_name = pd["name"]
 		p.device = self
+		if pd.get("is_disabled", false):
+			p.disable()
 		p.register()
 	
 	start()

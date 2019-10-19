@@ -5,7 +5,8 @@ var _port:Port = null
 
 onready var hostname = $values/hostname
 onready var portname = $values/port
-onready var updown = $labels/down
+onready var portstate = $values/port_state
+onready var disable = $labels/disable
 
 func _ready():
 	md.connect_message(g.RESET, self, "reset")
@@ -25,19 +26,21 @@ func set_device(device:Device):
 func set_port(port:Port):
 	_port = port
 	portname.text = ""
+	portstate.text = ""
 	if port:
 		portname.text = port.port_name		
 	update_button_labels()
 
 func update_button_labels():
-	if _port and _port.connected_port:
-		updown.disabled = false
-		updown.text = "down"
-		updown.hint_tooltip = "disable port"
-	elif _port and _port.connection and !_port.connected_port:
-		updown.disabled = false
-		updown.text = "up"
-		updown.hint_tooltip = "enable port"
+	if _port:
+		portname.text = _port.port_name
+		portstate.text = _port.state_as_string()
+		if _port.state == Port.DISABLED:
+			disable.text = "enable"
+			disable.hint_tooltip = "enable port"
+		else:
+			disable.text = "disable"
+			disable.hint_tooltip = "disable port"
 
 	hide()
 	show()
@@ -48,13 +51,10 @@ func _on_poweroff_pressed():
 func _on_down_pressed():
 	if !_port:
 		return
-	if _port.connected_port:
-		_port.connected_port = null
-	elif _port.connection:
-		if _port.connection.port_start == _port:
-			_port.connected_port = _port.connection.port_end
-		else:
-			_port.connected_port = _port.connection.port_start
+	if _port.state == Port.DISABLED:
+		_port.enable()
+	else:
+		_port.disable()
 			
 	update_button_labels()
 

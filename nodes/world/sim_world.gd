@@ -54,8 +54,9 @@ func add_connection(t, msg):
 
 func _save(file="user://save.json"):	
 	var data = {}
-	data["version"] = 2
+	data["version"] = 3
 	data["site_name"] = self.site_name
+	data["hostname_counter"] = g.hostname_counter
 	data["entities"] = []
 	
 	for entity in entities.get_children():
@@ -101,13 +102,13 @@ func _load_save(file="user://save.json"):
 		return false
 	
 	var v = data["version"]
-	if  v != 2:
+	if  v != 3:
 		md.emit_message(g.ERROR, {"error": "unknown version %s in %s" % [v,file]})
 		return false
 	
 	self.site_name = data["site_name"]
 	md.emit_message(g.SITE_NAME_CHANGE, {"name": self.site_name})
-	
+	g.hostname_counter = data["hostname_counter"]
 	for ed in data["entities"]:
 		var e = load(ed["filename"]).instance()
 		e.position = Vector2(ed["pos_x"], ed["pos_y"])

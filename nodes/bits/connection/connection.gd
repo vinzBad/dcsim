@@ -21,7 +21,7 @@ func start(port:Node2D):
 	self.global_position = port.global_position
 	is_active = true
 	port_start = port
-
+	port.set_conn(self)
 
 func finish(port:Node2D):
 	compute_next_points(to_local(port.global_position))
@@ -29,6 +29,23 @@ func finish(port:Node2D):
 	update()
 	is_active = false
 	port_end = port
+	port.set_conn(self)
+	
+
+func other_port(port):
+	assert(port != null)
+	assert(port == port_start or port == port_end)
+	if port == port_start:
+		return port_end
+	else:
+		return port_start
+	
+func remove():
+	if port_start:
+		port_start.remove_conn()
+	if port_end:
+		port_end.remove_conn()
+	queue_free()
 	
 
 func _input(event):
@@ -102,7 +119,5 @@ func load_from_save(data:Dictionary):
 	port_start = g.find_port(data["port_start"]["hostname"], data["port_start"]["port_name"])
 	port_end = g.find_port(data["port_end"]["hostname"], data["port_end"]["port_name"])
 	
-	port_start.connection = self
-	port_start.connected_port = port_end
-	port_end.connection = self
-	port_end.connected_port = port_start
+	port_end._conn = self
+	port_start.set_conn(self)
