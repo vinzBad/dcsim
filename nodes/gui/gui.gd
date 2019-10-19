@@ -36,8 +36,9 @@ func handle_placing():
 
 func _input(event):
 	if event.is_action_pressed("gui_cancel"):
-		select_device(null)
-		select_port(null)
+		if state == IDLE:
+			select_device(null)
+			select_port(null)
 		if state == PLACING:
 			get_parent().remove_child(device)
 			device.queue_free()
@@ -48,6 +49,7 @@ func _input(event):
 			get_parent().remove_child(connection)
 			connection.queue_free()
 			connection.port_start.connection = null
+			connection.port_start.update()
 			connection = null
 			state = IDLE
 		
