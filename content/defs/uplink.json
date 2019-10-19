@@ -1,0 +1,13 @@
+{
+    "class": "device",
+    "device_type": "uplink",
+    "hostname_format": "internet%s",
+    "height": 2,
+    "ports": [
+        {
+            "name": "uplink",
+            "x": 13,
+            "y": 3
+        }        
+    ]
+}

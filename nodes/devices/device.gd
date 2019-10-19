@@ -1,4 +1,3 @@
-tool
 class_name Device
 extends Node2D
 
@@ -14,19 +13,28 @@ export var select_color = Color.white
 export var device_type = "DEVICE"
 
 onready var uid = g.get_uid()
-
 onready var ports = $ports
+onready var control = $control
+onready var label = $control/label
+onready var world = get_parent().get_parent()
 
 var is_hovering = false
 var is_selected = false
+var is_active = false
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	g.uid2device[uid] = self
-	
+var hostname = ""
+var height = 2
+
 func start():
 	g.packet_nav.add_point(uid, Vector3(global_position.x, global_position.y, 0))
 	add_to_group(device_type)
+	is_active = true
+
+	
+func stop():
+	g.packet_nav.remove_point(uid)
+	remove_from_group(device_type)
+	is_active = false
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -36,10 +44,12 @@ func _draw():
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var height = rect.size.y
 	var width = rect.size.x
-	if is_hovering:
-		draw_rect(rect, hover_color, true)
-	elif is_selected:
-		draw_rect(rect, select_color, true)
+	draw_rect(rect, Color.black, true)
+	if is_active:			
+		if is_hovering:
+			draw_rect(rect, hover_color, true)
+		elif is_selected:
+			draw_rect(rect, select_color, true)
 	
 	draw_rect(rect, color, false)
 	for p in [Vector2.ZERO, Vector2(0, height), Vector2(width, 0), Vector2(width, height)]:
@@ -53,24 +63,68 @@ func get_port_to_uid(uid):
 	return null
 
 func port_up(my_port, other_port):
-	g.packet_nav.connect_points(uid, other_port.device.uid)
+	if !g.packet_nav.are_points_connected(uid, other_port.device.uid):
+		g.packet_nav.connect_points(uid, other_port.device.uid)
 
 func port_down(my_port, other_port):
 	if other_port != null:
-		g.packet_nav.disconnect_points(uid, other_port.device.uid)
+		if g.packet_nav.are_points_connected(uid, other_port.device.uid):
+			g.packet_nav.disconnect_points(uid, other_port.device.uid)
 
 func save():
 	var data = {
+		"hostname": self.hostname,
+		"device_type": self.device_type,
 		"ports":[],
-		"services":[]
+		"services":[],
+		"height": self.height
 	}
+	
+	for port in ports.get_children():
+		data["ports"].append({
+			"pos_x": port.position.x,
+			"pos_y": port.position.y,
+			"name": port.port_name
+		})
 	
 	return data
 
-func load(data):
-	start()
-	
+func register():
+	g.uid2device[uid] = self
+	g.hostname2device[hostname] = self
 
+
+func init_from_def(def):
+	def["hostname"] = g.get_hostname(def)
+
+	for i in range(len(def["ports"])):
+		var pd = def["ports"][i] 
+		def["ports"][i]["pos_x"] = pd["x"] * g.grid_size
+		def["ports"][i]["pos_y"] = pd["y"] * g.grid_size
+		
+	load_from_save(def)	
+
+
+func load_from_save(data:Dictionary):
+	self.hostname = data["hostname"]
+	self.label.text = hostname
+	self.device_type = data["device_type"]
+	self.height = data.get("height", 2)
+	self.control.rect_size.y = height * g.unit_height
+	self.register()
+	for pd in data["ports"]:
+		var p  = g.port.instance()
+		ports.add_child(p)
+		p.position = Vector2(pd["pos_x"], pd["pos_y"])
+		p.port_name = pd["name"]
+		p.device = self
+		p.register()
+	
+	start()
+	yield(get_tree(), "idle_frame")
+	self.set_name(hostname)
+	
+	
 func _on_control_mouse_entered():
 	is_hovering = true
 	update()
@@ -81,14 +135,10 @@ func _on_control_mouse_exited():
 	update()
 
 
-func _on_control_gui_input(event):
-	if is_hovering:
-		if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
-			if event.pressed:
-				get_tree().call_group(g.NEEDS_DEVICE_CLICK, "on_device_click", self)
-				is_selected = true
-				update()
-				if g.selected_device:
-					g.selected_device.is_selected = false
-					g.selected_device.update()
-				g.selected_device = self
+func _on_control_gui_input(event:InputEvent):
+	if !is_active:
+		return
+	
+	if is_hovering and event.is_action_pressed("gui_select_device"):
+		md.emit_message(g.SELECT_DEVICE, {"device": self})
+		

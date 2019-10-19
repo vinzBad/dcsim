@@ -142,5 +142,4 @@ func _on_packet_timer_timeout():
 
 
 func _on_clear_pressed():
-	for child in world.get_children():
-		child.queue_free()
+	world.reset()
