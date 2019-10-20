@@ -76,6 +76,7 @@ func select_device(device):
 	if selected_device != null:
 		selected_device.is_selected = false
 		selected_device.update()
+	
 	if device:
 		selected_device = device
 		selected_device.is_selected = true
@@ -85,6 +86,8 @@ func select_device(device):
 		device_view.visible = true
 		device_view.hide()
 		device_view.show()
+	else:
+		selected_device = null
 		
 func select_port(port):
 	device_view.set_port(port)
@@ -100,6 +103,8 @@ func select_port(port):
 		selected_port.update()		
 		if port.device != selected_device:
 			select_device(port.device)
+	else:
+		selected_port = null
 	
 		
 func start_connecting(port):
