@@ -78,6 +78,7 @@ func _process(delta):
 		update()
 
 func _draw():
+	var color = Color(g.colorscheme["connection"])
 	var lp = Vector2.ZERO
 	#draw_circle(lp, 4, color)
 	for p in points:

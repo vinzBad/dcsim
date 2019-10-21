@@ -66,19 +66,28 @@ func reset(t=null, msg=null):
 	hostname_counter = {}
 	hostname2device = {}
 	load_defs()
-	
+	load_colors()
+
 ## DEFs
 
 var defs = {}
 var hostname_counter = {}
 var hostname2device = {}
 var _port_registry = {}
+var colorscheme = {}
 
 func _ready():
 	md.connect_message(g.RESET, self, "reset")
 	yield(get_tree(), "idle_frame")
 	reset()
 
+func load_colors():
+	var def_file = File.new()
+	def_file.open("res://content/colorschemes/default.json", File.READ)
+	var def = parse_json(def_file.get_as_text())
+	def_file.close()
+	colorscheme = def
+	
 func register_port(device:Device, port:Port):
 	assert(port != null)
 	assert(device != null)

@@ -6,10 +6,6 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-export var color = Color.green
-export var hover_color = Color.black
-export var select_color = Color.white
-
 export var device_type = "DEVICE"
 
 onready var uid = g.get_uid()
@@ -41,19 +37,26 @@ func stop():
 #	pass
 
 func _draw():
+	var color = Color(g.colorscheme["device"][self.device_type])
+	var bg = Color(g.colorscheme["background"])
+	var hover_color = color.blend(bg).lightened(0.3)
+	var select_color = hover_color.darkened(0.15)
+	
 	var rect = Rect2($control.rect_position, $control.rect_size)
-	var height = rect.size.y
-	var width = rect.size.x
-	draw_rect(rect, Color.black, true)
+	var innerer_rect = Rect2(rect.position + Vector2(3,3), rect.size - Vector2(6,6))
+	var inner_rect = Rect2(rect.position + Vector2(1,1), rect.size - Vector2(2,2))
+
+	draw_rect(rect, bg)
+	draw_rect(inner_rect, color)
+	draw_rect(innerer_rect, bg)
+	
 	if is_active:			
 		if is_hovering:
-			draw_rect(rect, hover_color, true)
+			draw_rect(innerer_rect, hover_color)
 		elif is_selected:
-			draw_rect(rect, select_color, true)
+			draw_rect(innerer_rect, select_color)
 	
-	draw_rect(rect, color, false)
-	for p in [Vector2.ZERO, Vector2(0, height), Vector2(width, 0), Vector2(width, height)]:
-		draw_circle(p, 4, color)
+	
 
 func get_port_to_uid(uid):
 	for port in $ports.get_children():

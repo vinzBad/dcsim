@@ -6,7 +6,6 @@ enum {UP, DOWN, DISABLED}
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var color = Color.green
 var port_name = ""
 
 var is_hovering = false
@@ -78,27 +77,35 @@ func register():
 	self.set_name(port_name)
 
 func _draw():
+	var active = Color(g.colorscheme["port"]["active"])
+	var outline = Color(g.colorscheme["port"]["outline"])
+	var disabled = Color(g.colorscheme["port"]["disabled"])
+	var bg = Color(g.colorscheme["background"])
+	
+	var hover_color = active.blend(bg).lightened(0.3)
+	
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(2,2), rect.size - Vector2(4,4))
 	var select_rect = Rect2(rect.position - Vector2(2,2), rect.size + Vector2(4,4))
 	var conn_rect = Rect2(rect.position + Vector2(5,5), rect.size - Vector2(10,10))
+	
 	if is_selected:
 		draw_rect(select_rect, Color.gold)
 	
-	draw_rect(rect, color)	
-	draw_rect(hover_rect, Color.black)
+	draw_rect(rect, outline)	
+	draw_rect(hover_rect, bg)
 	
 	if _conn:
-		draw_rect(conn_rect, Color.azure)
+		draw_rect(conn_rect, active)
 	
 	if state == DISABLED:
-		draw_rect(hover_rect, Color.darkgray)
+		draw_rect(hover_rect, disabled)
 	
 	if state == UP:
-		draw_rect(hover_rect, Color.azure)
+		draw_rect(hover_rect, active)
 	
 	if is_hovering:
-		draw_rect(hover_rect, color)	
+		draw_rect(hover_rect, hover_color)	
 
 func state_as_string():
 	return {UP:"Up", DOWN:"Down", DISABLED:"Disabled"}.get(state)
