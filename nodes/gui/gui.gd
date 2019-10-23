@@ -154,6 +154,7 @@ func _handler(type, msg):
 		if connection:
 			connection.queue_free()
 		state = IDLE
+		_set_colorscheme_options()
 
 	if type == g.ERROR:
 		print("%s: %s" % [type, msg["error"]])
@@ -203,14 +204,20 @@ func _set_colorscheme_options():
 	colorschemes.clear()
 	colorscheme_select.clear()
 	var dir = Directory.new()
+	var default_idx = 0
 	if dir.open("res://content/colorschemes/") == OK:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while (file_name != ""):
 			if !dir.current_is_dir() and file_name.ends_with(".json"):
 				colorscheme_select.add_item(file_name.get_basename(), len(colorschemes))
-				colorschemes.append("res://content/colorschemes/"+file_name)				
+				if file_name.begins_with("default"):
+					default_idx = len(colorschemes)
+				colorschemes.append("res://content/colorschemes/"+file_name)
+
 			file_name = dir.get_next()
+	if colorscheme_select.selected == -1:
+		colorscheme_select.select(default_idx)
 
 func _on_save_pressed():
 	var file = null
@@ -259,3 +266,4 @@ func _on_colorschemeselect_item_selected(ID):
 func _on_reload_pressed():
 	g.load_colors(colorschemes[colorscheme_select.selected])
 	get_tree().call_group(g.NEED_UPDATE_COLORSCHEME, "update")
+	_set_colorscheme_options()

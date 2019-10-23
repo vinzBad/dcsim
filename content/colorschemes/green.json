@@ -1,0 +1,17 @@
+{
+    "device": {
+        "uplink": "007700",
+        "router": "007700",
+        "switch": "007700",
+        "server": "007700"
+    },
+    "connection": "00ff00",
+    "port": {
+        "outline": "007700",
+        "active": "00ff00",
+        "disabled": "005500",
+        "selected": "00bb00"
+    },
+    "background": "001100"
+}
+
