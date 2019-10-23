@@ -208,8 +208,8 @@ func _set_colorscheme_options():
 		var file_name = dir.get_next()
 		while (file_name != ""):
 			if !dir.current_is_dir() and file_name.ends_with(".json"):
-				colorscheme_select.add_item(file_name, len(colorschemes))
-				colorschemes.append(file_name)				
+				colorscheme_select.add_item(file_name.get_basename(), len(colorschemes))
+				colorschemes.append("res://content/colorschemes/"+file_name)				
 			file_name = dir.get_next()
 
 func _on_save_pressed():

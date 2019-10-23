@@ -1,15 +1,15 @@
 {
     "device": {
-        "uplink": "2aa198",
-        "router": "268bd2",
-        "switch": "859900",
-        "server": "f4bc1c"
+        "uplink": "dc2566",
+        "router": "55bcce",
+        "switch": "56b7a5",
+        "server": "d4c96e"
     },
-    "connection": "859900",
+    "connection": "8fc029",
     "port": {
-        "outline": "20C20E",
-        "active": "859900",
-        "disabled": "dc322f"
+        "outline": "76715e",
+        "active": "8fc029",
+        "disabled": "dc2566"
     },
     "background": "272822"
 }

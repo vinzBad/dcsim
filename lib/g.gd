@@ -69,7 +69,7 @@ func reset(t=null, msg=null):
 	hostname_counter = {}
 	hostname2device = {}
 	load_defs()
-	load_colors("default.json")
+	load_colors("res://content/colorschemes/default.json")
 
 ## DEFs
 
@@ -84,9 +84,10 @@ func _ready():
 	yield(get_tree(), "idle_frame")
 	reset()
 
-func load_colors(name):
+func load_colors(filepath):
+	print("loading colorscheme from " + filepath)
 	var def_file = File.new()
-	def_file.open("res://content/colorschemes/"+ name, File.READ)
+	def_file.open(filepath, File.READ)
 	var def = parse_json(def_file.get_as_text())
 	def_file.close()
 	colorscheme = def

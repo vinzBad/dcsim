@@ -38,7 +38,8 @@ func _ready():
 func _draw():
 	var color = Color(g.colorscheme["device"][self.device_type])
 	var bg = Color(g.colorscheme["background"])
-	var hover_color = color.blend(bg).lightened(0.3)
+	var inner_color = color.darkened(0.75)
+	var hover_color = inner_color.lightened(0.3)
 	var select_color = hover_color.darkened(0.15)
 	
 	var rect = Rect2($control.rect_position, $control.rect_size)
@@ -47,7 +48,7 @@ func _draw():
 
 	draw_rect(rect, bg)
 	draw_rect(inner_rect, color)
-	draw_rect(innerer_rect, bg)
+	draw_rect(innerer_rect, inner_color)
 	
 	if is_active:			
 		if is_hovering:
