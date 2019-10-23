@@ -15,6 +15,9 @@ var state = DOWN
 
 var _conn: Connection
 
+func _ready():
+	add_to_group(g.NEED_UPDATE_COLORSCHEME)
+
 func other_port():
 	if _conn:
 		return _conn.other_port(self)
@@ -82,7 +85,7 @@ func _draw():
 	var disabled = Color(g.colorscheme["port"]["disabled"])
 	var bg = Color(g.colorscheme["background"])
 	
-	var hover_color = active.blend(bg).lightened(0.3)
+	var hover_color = active.darkened(0.45)
 	
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(2,2), rect.size - Vector2(4,4))
@@ -90,7 +93,7 @@ func _draw():
 	var conn_rect = Rect2(rect.position + Vector2(5,5), rect.size - Vector2(10,10))
 	
 	if is_selected:
-		draw_rect(select_rect, Color.gold)
+		draw_rect(select_rect, Color(g.colorscheme["port"]["selected"]))
 	
 	draw_rect(rect, outline)	
 	draw_rect(hover_rect, bg)

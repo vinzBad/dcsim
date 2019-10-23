@@ -5,12 +5,13 @@
         "switch": "56b7a5",
         "server": "d4c96e"
     },
-    "connection": "8fc029",
+    "connection": "a7e22e",
     "port": {
         "outline": "76715e",
-        "active": "8fc029",
-        "disabled": "dc2566"
+        "active": "a7e22e",
+        "disabled": "fa2772",
+        "selected": "f1ebeb"
     },
-    "background": "272822"
+    "background": "131312"
 }
 

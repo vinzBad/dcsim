@@ -90,7 +90,10 @@ func load_colors(filepath):
 	def_file.open(filepath, File.READ)
 	var def = parse_json(def_file.get_as_text())
 	def_file.close()
-	colorscheme = def
+	if def == null:
+		print("loading colorscheme failed")
+	else:
+		colorscheme = def
 	
 func register_port(device:Device, port:Port):
 	assert(port != null)
