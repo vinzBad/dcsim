@@ -32,9 +32,8 @@ func stop():
 	remove_from_group(device_type)
 	is_active = false
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _ready():
+	add_to_group(g.NEED_UPDATE_COLORSCHEME)
 
 func _draw():
 	var color = Color(g.colorscheme["device"][self.device_type])

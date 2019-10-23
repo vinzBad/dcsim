@@ -10,10 +10,12 @@ var selected_port:Port
 var connection:Connection
 var state = IDLE
 var file_names = []
+var colorschemes = []
 var is_dragging = false
 
 onready var file_select:OptionButton = $hbox/margin_buttons/vbox_buttons/file
 onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
+onready var colorscheme_select:OptionButton = $hbox_colorscheme/colorschemeselect
 
 onready var device_view =  $hbox_device
 
@@ -26,6 +28,7 @@ func _ready():
 	md.connect_message(g.MOVE_DEVICE, self, "_handler")
 	md.connect_message(g.REMOVE_DEVICE, self, "_handler")
 	_set_file_options()
+	_set_colorscheme_options()
 	
 	device_view.visible = false
 	
@@ -196,6 +199,18 @@ func _set_file_options():
 				file_names.append("user://"+file_name)				
 			file_name = dir.get_next()
 
+func _set_colorscheme_options():
+	colorschemes.clear()
+	colorscheme_select.clear()
+	var dir = Directory.new()
+	if dir.open("res://content/colorschemes/") == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while (file_name != ""):
+			if !dir.current_is_dir() and file_name.ends_with(".json"):
+				colorscheme_select.add_item(file_name, len(colorschemes))
+				colorschemes.append(file_name)				
+			file_name = dir.get_next()
 
 func _on_save_pressed():
 	var file = null
@@ -235,3 +250,12 @@ func _on_switch_pressed():
 func _on_server_pressed():
 	if state == IDLE or state == PLACING:
 		start_placing("server")
+
+
+func _on_colorschemeselect_item_selected(ID):
+	g.load_colors(colorschemes[ID])
+	get_tree().call_group(g.NEED_UPDATE_COLORSCHEME, "update")
+
+func _on_reload_pressed():
+	g.load_colors(colorschemes[colorscheme_select.selected])
+	get_tree().call_group(g.NEED_UPDATE_COLORSCHEME, "update")

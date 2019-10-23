@@ -3,6 +3,9 @@ extends Node
 ## Colors
 var green = Color("#20C20E")
 
+## Group Names
+const NEED_UPDATE_COLORSCHEME = "NEED_UPDATE_COLORSCHEME"
+
 ## Message Names
 const ERROR = "ERROR"
 const TICK = "TICK"
@@ -66,7 +69,7 @@ func reset(t=null, msg=null):
 	hostname_counter = {}
 	hostname2device = {}
 	load_defs()
-	load_colors()
+	load_colors("default.json")
 
 ## DEFs
 
@@ -81,9 +84,9 @@ func _ready():
 	yield(get_tree(), "idle_frame")
 	reset()
 
-func load_colors():
+func load_colors(name):
 	var def_file = File.new()
-	def_file.open("res://content/colorschemes/default.json", File.READ)
+	def_file.open("res://content/colorschemes/"+ name, File.READ)
 	var def = parse_json(def_file.get_as_text())
 	def_file.close()
 	colorscheme = def

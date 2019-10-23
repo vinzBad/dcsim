@@ -43,7 +43,6 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="margin_buttons" type="MarginContainer" parent="hbox"]
-editor/display_folded = true
 margin_right = 102.0
 margin_bottom = 250.0
 
@@ -160,6 +159,24 @@ margin_left = 6.0
 margin_top = -8.0
 margin_right = 204.0
 margin_bottom = 120.0
+
+[node name="hbox_colorscheme" type="HBoxContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -147.0
+margin_bottom = 26.0
+grow_horizontal = 0
+
+[node name="colorschemeselect" type="OptionButton" parent="hbox_colorscheme"]
+margin_right = 161.0
+margin_bottom = 26.0
+text = "default.json"
+
+[node name="reload" type="Button" parent="hbox_colorscheme"]
+margin_left = 165.0
+margin_right = 237.0
+margin_bottom = 26.0
+text = "reload"
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/reset" to="." method="_on_reset_pressed"]
@@ -167,3 +184,5 @@ margin_bottom = 120.0
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/router" to="." method="_on_router_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/switch" to="." method="_on_switch_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/server" to="." method="_on_server_pressed"]
+[connection signal="item_selected" from="hbox_colorscheme/colorschemeselect" to="." method="_on_colorschemeselect_item_selected"]
+[connection signal="pressed" from="hbox_colorscheme/reload" to="." method="_on_reload_pressed"]
