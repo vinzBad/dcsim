@@ -5,6 +5,7 @@ onready var camera:Camera2D = get_node(camera_path)
 
 enum {IDLE, PLACING, CONNECTING}
 var device:Device
+var selected_service
 var selected_device:Device
 var selected_port:Port
 var connection:Connection
@@ -27,6 +28,7 @@ func _ready():
 	md.connect_message(g.RESET, self, "_handler")
 	md.connect_message(g.MOVE_DEVICE, self, "_handler")
 	md.connect_message(g.REMOVE_DEVICE, self, "_handler")
+	md.connect_message(g.SELECT_SERVICE, self, "_handler")
 	_set_file_options()
 	_set_colorscheme_options()
 	
@@ -44,6 +46,7 @@ func _input(event):
 		if state == IDLE:
 			select_device(null)
 			select_port(null)
+			select_service(null)
 		if state == PLACING:
 			get_parent().remove_child(device)
 			device.queue_free()
@@ -91,7 +94,7 @@ func select_device(device):
 		device_view.show()
 	else:
 		selected_device = null
-		
+
 func select_port(port):
 	device_view.set_port(port)
 	
@@ -109,7 +112,16 @@ func select_port(port):
 	else:
 		selected_port = null
 	
-		
+func select_service(service):
+	if selected_service:
+		selected_service.is_selected = false
+		selected_service.update()
+	
+	selected_service = service
+	if service:
+		selected_service.is_selected = true
+		selected_service.update()
+
 func start_connecting(port):
 	state = CONNECTING
 
@@ -186,6 +198,8 @@ func _handler(type, msg):
 			select_device(null)
 			select_port(null)
 		msg["device"].remove()
+	elif type == g.SELECT_SERVICE and state == IDLE:
+		select_service(msg["service"])
 
 func _set_file_options():
 	file_names.clear()

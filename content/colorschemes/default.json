@@ -12,6 +12,12 @@
         "disabled": "fa2772",
         "selected": "f1ebeb"
     },
+    "service": {
+        "outline": "f4bf75",
+        "active": "f4bf75",
+        "disabled": "fa2772",
+        "selected": "f1ebeb"
+    },
     "background": "131312"
 }
 

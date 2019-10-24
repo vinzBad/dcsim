@@ -10,6 +10,7 @@ export var device_type = "DEVICE"
 
 onready var uid = g.get_uid()
 onready var ports = $ports
+onready var services = $services
 onready var control = $control
 onready var label = $control/label
 onready var world = get_parent().get_parent()
@@ -88,7 +89,6 @@ func save():
 		"hostname": self.hostname,
 		"device_type": self.device_type,
 		"ports":[],
-		"services":[],
 		"height": self.height
 	}
 	
@@ -140,6 +140,20 @@ func load_from_save(data:Dictionary):
 		if pd.get("is_disabled", false):
 			p.disable()
 		p.register()
+	
+	if not data.has("service") and device_type == "server":
+		data["service"] = {}
+		data["service"]["pos_x"] = 85
+		data["service"]["pos_y"] = 15
+		data["service"]["name"] = "empty"
+
+	if data.has("service"):
+		var sd = data["service"]
+		var s = g.service.instance()
+		services.add_child(s)
+		s.position = Vector2(sd["pos_x"], sd["pos_y"])
+		s.service_name = sd["name"]
+		s.device = self
 	
 	start()
 	yield(get_tree(), "idle_frame")

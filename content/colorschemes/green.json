@@ -12,6 +12,11 @@
         "disabled": "005500",
         "selected": "00bb00"
     },
+    "service": {
+        "outline": "007700",
+        "active": "00ff00",
+        "disabled": "005500",
+        "selected": "00bb00"
+    },
     "background": "001100"
 }
-

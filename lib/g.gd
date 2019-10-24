@@ -18,6 +18,7 @@ const ADD_DEVICE = "ADD_DEVICE"
 const ADD_CONNECTION = "ADD_CONNECTION"
 const SELECT_DEVICE = "SELECT_DEVICE"
 const SELECT_PORT = "SELECT_PORT"
+const SELECT_SERVICE = "SELECT_SERVICE"
 const PORT_STATUS = "PORT_STATUS"
 const CONN_STATUS = "CONN_STATUS"
 const MOVE_DEVICE = "MOVE_DEVICE"
@@ -31,7 +32,7 @@ var server = preload("res://nodes/devices/server/server.tscn")
 var router = preload("res://nodes/devices/router/router.tscn")
 var uplink = preload("res://nodes/devices/uplink/uplink.tscn")
 var packet = preload("res://nodes/bits/packet/packet.tscn")
-
+var service = preload("res://nodes/bits/service/service.tscn")
 
 ## Constants
 var unit_height = 30
