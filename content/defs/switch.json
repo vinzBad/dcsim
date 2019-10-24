@@ -1,6 +1,10 @@
 {
     "class": "device",
     "device_type": "switch",
+    "price": {
+        "fixed": 40,
+        "pertick": 0.25
+    },
     "hostname_format": "sw-%s",
     "height": 2,
     "ports": [

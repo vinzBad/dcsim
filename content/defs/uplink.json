@@ -1,6 +1,10 @@
 {
     "class": "device",
     "device_type": "uplink",
+    "price": {
+        "fixed": 100,
+        "pertick": 0.5
+    },
     "hostname_format": "internet%s",
     "height": 2,
     "ports": [

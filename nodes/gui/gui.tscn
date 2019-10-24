@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://nodes/gui/gui.gd" type="Script" id=1]
 [ext_resource path="res://nodes/gui/hbox_device/hbox_device.tscn" type="PackedScene" id=2]
+[ext_resource path="res://res/fonts/DejaVuSans.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "do_reset"
@@ -32,6 +33,11 @@ action = "add_server"
 
 [sub_resource type="ShortCut" id=10]
 shortcut = SubResource( 9 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 22
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="gui" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -94,6 +100,7 @@ margin_right = 102.0
 margin_bottom = 130.0
 shortcut = SubResource( 4 )
 text = "uplink[1]"
+align = 0
 
 [node name="router" type="Button" parent="hbox/margin_buttons/vbox_buttons/hbox/vbox"]
 margin_top = 134.0
@@ -101,20 +108,25 @@ margin_right = 102.0
 margin_bottom = 160.0
 shortcut = SubResource( 6 )
 text = "router[2]"
+align = 0
 
 [node name="switch" type="Button" parent="hbox/margin_buttons/vbox_buttons/hbox/vbox"]
+margin_left = 0.814499
 margin_top = 164.0
-margin_right = 102.0
+margin_right = 102.814
 margin_bottom = 190.0
 shortcut = SubResource( 8 )
 text = "switch[3]"
+align = 0
 
 [node name="server" type="Button" parent="hbox/margin_buttons/vbox_buttons/hbox/vbox"]
+margin_left = 0.814499
 margin_top = 194.0
-margin_right = 102.0
+margin_right = 102.814
 margin_bottom = 220.0
 shortcut = SubResource( 10 )
 text = "server[4]"
+align = 0
 
 [node name="spacer2" type="Control" parent="hbox"]
 margin_left = 106.0
@@ -124,31 +136,82 @@ rect_min_size = Vector2( 5, 10 )
 
 [node name="margin_labels" type="MarginContainer" parent="hbox"]
 margin_left = 115.0
-margin_right = 249.0
+margin_right = 289.0
 margin_bottom = 250.0
 
 [node name="hbox" type="HBoxContainer" parent="hbox/margin_labels"]
-margin_right = 134.0
+margin_right = 174.0
 margin_bottom = 250.0
 
 [node name="vbox_labels" type="VBoxContainer" parent="hbox/margin_labels/hbox"]
-margin_right = 50.0
+margin_right = 90.0
 margin_bottom = 250.0
 
 [node name="site" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
-margin_right = 50.0
+visible = false
+margin_right = 60.0
 margin_bottom = 20.0
 text = "SITE:"
 
+[node name="money" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
+margin_right = 90.0
+margin_bottom = 20.0
+text = "MONEY:"
+
+[node name="cashflow" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
+margin_top = 24.0
+margin_right = 90.0
+margin_bottom = 44.0
+text = "CASHFLOW:"
+
+[node name="servicequeue" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
+margin_top = 48.0
+margin_right = 90.0
+margin_bottom = 68.0
+text = "QUEUE:"
+
+[node name="speed" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
+margin_top = 72.0
+margin_right = 90.0
+margin_bottom = 92.0
+text = "SPEED:"
+
 [node name="vbox_values" type="VBoxContainer" parent="hbox/margin_labels/hbox"]
-margin_left = 54.0
-margin_right = 134.0
+margin_left = 94.0
+margin_right = 174.0
 margin_bottom = 250.0
 
 [node name="site" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
+visible = false
 margin_right = 80.0
 margin_bottom = 20.0
 text = "l33t.xyz"
+
+[node name="money" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
+margin_right = 80.0
+margin_bottom = 20.0
+text = "500.00 €"
+
+[node name="cashflow" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
+margin_top = 24.0
+margin_right = 80.0
+margin_bottom = 44.0
+text = "0 €"
+align = 2
+
+[node name="servicequeue" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
+margin_top = 48.0
+margin_right = 80.0
+margin_bottom = 68.0
+text = "0"
+align = 2
+
+[node name="speed" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
+margin_top = 72.0
+margin_right = 80.0
+margin_bottom = 92.0
+text = "PAUSE"
+align = 2
 
 [node name="hbox_device" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.0
@@ -177,6 +240,37 @@ margin_left = 165.0
 margin_right = 237.0
 margin_bottom = 26.0
 text = "reload"
+
+[node name="hbox_tickspeed" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -73.5
+margin_right = 73.5
+margin_bottom = 33.0
+grow_vertical = 0
+
+[node name="play" type="Button" parent="hbox_tickspeed"]
+margin_right = 26.0
+margin_bottom = 33.0
+grow_vertical = 0
+custom_fonts/font = SubResource( 11 )
+text = "||"
+
+[node name="play3" type="Button" parent="hbox_tickspeed"]
+margin_left = 30.0
+margin_right = 59.0
+margin_bottom = 33.0
+grow_vertical = 0
+custom_fonts/font = SubResource( 11 )
+text = "▶"
+
+[node name="play2" type="Button" parent="hbox_tickspeed"]
+margin_left = 63.0
+margin_right = 109.0
+margin_bottom = 33.0
+grow_vertical = 0
+custom_fonts/font = SubResource( 11 )
+text = "▶▶"
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/load" to="." method="_on_load_pressed"]
 [connection signal="pressed" from="hbox/margin_buttons/vbox_buttons/hbox/vbox/reset" to="." method="_on_reset_pressed"]

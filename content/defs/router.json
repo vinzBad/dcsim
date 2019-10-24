@@ -1,6 +1,10 @@
 {
     "class": "device",
     "device_type": "router",
+    "price": {
+        "fixed": 50,
+        "pertick": 0.3
+    },
     "hostname_format": "r-%s",
     "height": 1,
     "ports": [

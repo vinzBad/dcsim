@@ -1,6 +1,10 @@
 {
     "class": "device",
     "device_type": "server",
+    "price": {
+        "fixed": 20,
+        "pertick": 0.1
+    },
     "hostname_format": "srv-%s",
     "height": 1,
     "ports": [

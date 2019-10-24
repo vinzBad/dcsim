@@ -15,8 +15,17 @@ var colorschemes = []
 var is_dragging = false
 
 onready var file_select:OptionButton = $hbox/margin_buttons/vbox_buttons/file
-onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
 onready var colorscheme_select:OptionButton = $hbox_colorscheme/colorschemeselect
+
+onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
+onready var money_label:Label = $hbox/margin_labels/hbox/vbox_values/money
+onready var cashflow_label:Label = $hbox/margin_labels/hbox/vbox_values/cashflow
+onready var queue_label:Label = $hbox/margin_labels/hbox/vbox_values/servicequeue
+
+onready var uplink_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/uplink
+onready var router_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/router
+onready var switch_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/switch
+onready var server_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/server
 
 onready var device_view =  $hbox_device
 
@@ -31,12 +40,16 @@ func _ready():
 	md.connect_message(g.SELECT_SERVICE, self, "_handler")
 	_set_file_options()
 	_set_colorscheme_options()
+	_set_button_prices()
 	
 	device_view.visible = false
 	
 func _process(delta):
 	if state == PLACING:
 		handle_placing()
+	money_label.text = "%s €" % g.money
+	queue_label.text = "%s" % g.queue
+	
 
 func handle_placing():
 	device.global_position = g.ridify(device.get_global_mouse_position())
@@ -155,6 +168,12 @@ func start_placing(device_type):
 	device.init_from_def(g.defs[device_type])
 	
 
+func _set_button_prices():
+	yield(get_tree(), "idle_frame")
+	uplink_button.text += " %s €" % g.defs["uplink"]["price"]["fixed"]
+	router_button.text += " %s €" % g.defs["router"]["price"]["fixed"]
+	switch_button.text += " %s €" % g.defs["switch"]["price"]["fixed"]
+	server_button.text += " %s €" % g.defs["server"]["price"]["fixed"]
 
 func _handler(type, msg):
 	if type == g.RESET:
@@ -167,7 +186,8 @@ func _handler(type, msg):
 			connection.queue_free()
 		state = IDLE
 		_set_colorscheme_options()
-
+		_set_button_prices()
+		
 	if type == g.ERROR:
 		print("%s: %s" % [type, msg["error"]])
 	elif type == g.SITE_NAME_CHANGE:

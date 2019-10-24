@@ -3,6 +3,10 @@ extends Node
 ## Colors
 var green = Color("#20C20E")
 
+## VAR
+var money = 500
+var queue = 5
+
 ## Group Names
 const NEED_UPDATE_COLORSCHEME = "NEED_UPDATE_COLORSCHEME"
 
@@ -69,6 +73,8 @@ func reset(t=null, msg=null):
 	defs = {}
 	hostname_counter = {}
 	hostname2device = {}
+	money = 500
+	queue = 5
 	load_defs()
 	load_colors("res://content/colorschemes/default.json")
 
