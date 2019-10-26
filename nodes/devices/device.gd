@@ -27,6 +27,10 @@ func start():
 	add_to_group(device_type)
 	is_active = true
 
+func get_service():
+	for s in services.get_children():
+		return s
+	return null
 	
 func stop():
 	g.packet_nav.remove_point(uid)
@@ -155,7 +159,7 @@ func load_from_save(data:Dictionary):
 		s.service_name = sd["name"]
 		s.device = self
 	
-	start()
+	
 	yield(get_tree(), "idle_frame")
 	self.set_name(hostname)
 	

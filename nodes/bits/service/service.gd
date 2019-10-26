@@ -11,7 +11,7 @@ var color = Color.greenyellow
 onready var rect = Rect2(0,0,width, height)
 
 var is_hovering = false
-var is_selected = false
+var in_use = false
 var service_name = null
 var device = null
 
@@ -21,39 +21,26 @@ func _ready():
 	add_to_group(g.NEED_UPDATE_COLORSCHEME)
 
 
+func is_up():
+	return true
 
 func _draw():
 	var active = Color(g.colorscheme["service"]["active"])
+	var inactive = Color(g.colorscheme["service"]["inactive"])
 	var outline = Color(g.colorscheme["service"]["outline"])
-	var disabled = Color(g.colorscheme["service"]["disabled"])
-	var bg = Color(g.colorscheme["background"])
-	
-	var hover_color = active.darkened(0.45)
-	
+	var down = Color(g.colorscheme["service"]["disabled"])
+
+
 	var rect = Rect2($control.rect_position, $control.rect_size)
 	var hover_rect = Rect2(rect.position + Vector2(3,3), rect.size - Vector2(6,6))
-	var select_rect = Rect2(rect.position - Vector2(2,2), rect.size + Vector2(4,4))
-	var conn_rect = Rect2(rect.position + Vector2(5,5), rect.size - Vector2(10,10))
-	
-	if is_selected:
-		draw_rect(select_rect, Color(g.colorscheme["service"]["selected"]))
+
+
 	
 	draw_rect(rect, outline)	
-	draw_rect(hover_rect, bg)
+	draw_rect(hover_rect, inactive)
 	
-	if is_hovering:
-		draw_rect(hover_rect, hover_color)	
+	if in_use:
+		draw_rect(hover_rect, active)
+	if !is_up():
+		draw_rect(hover_rect, down)
 
-
-func _on_control_mouse_entered():
-	is_hovering = true
-	update()
-
-func _on_control_mouse_exited():
-	is_hovering = false
-	update()
-
-func _on_control_gui_input(event):
-	if is_hovering:
-		if event.is_action_pressed("gui_select_device"):
-			md.emit_message(g.SELECT_SERVICE, {"service": self})

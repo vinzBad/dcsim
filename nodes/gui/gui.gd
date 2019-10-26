@@ -21,6 +21,7 @@ onready var site_label:Label = $hbox/margin_labels/hbox/vbox_values/site
 onready var money_label:Label = $hbox/margin_labels/hbox/vbox_values/money
 onready var cashflow_label:Label = $hbox/margin_labels/hbox/vbox_values/cashflow
 onready var queue_label:Label = $hbox/margin_labels/hbox/vbox_values/servicequeue
+onready var speed_label = $hbox/margin_labels/hbox/vbox_values/speed
 
 onready var uplink_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/uplink
 onready var router_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/router
@@ -28,6 +29,8 @@ onready var switch_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/s
 onready var server_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/server
 
 onready var device_view =  $hbox_device
+
+onready var timer:Timer = $timer
 
 func _ready():
 	md.connect_message(g.ERROR, self, "_handler")
@@ -49,6 +52,7 @@ func _process(delta):
 		handle_placing()
 	money_label.text = "%s €" % g.money
 	queue_label.text = "%s" % g.queue
+	cashflow_label.text = "%s €" % g.cashflow
 	
 
 func handle_placing():
@@ -139,7 +143,7 @@ func start_connecting(port):
 	state = CONNECTING
 
 	connection = g.connection.instance()
-	connection.start(port)
+	connection.start_on(port)
 	get_parent().add_child(connection)
 	
 func finish_connecting(port):
@@ -149,7 +153,7 @@ func finish_connecting(port):
 	if connection.port_start.device == port.device:
 		return
 	
-	connection.finish(port)
+	connection.finish_on(port)
 	
 	get_parent().remove_child(connection)	
 	md.emit_message(g.ADD_CONNECTION, {"connection":connection})
@@ -170,10 +174,10 @@ func start_placing(device_type):
 
 func _set_button_prices():
 	yield(get_tree(), "idle_frame")
-	uplink_button.text += " %s €" % g.defs["uplink"]["price"]["fixed"]
-	router_button.text += " %s €" % g.defs["router"]["price"]["fixed"]
-	switch_button.text += " %s €" % g.defs["switch"]["price"]["fixed"]
-	server_button.text += " %s €" % g.defs["server"]["price"]["fixed"]
+	uplink_button.text = "uplink[1] %s €" % g.defs["uplink"]["price"]["fixed"]
+	router_button.text = "router[2] %s €" % g.defs["router"]["price"]["fixed"]
+	switch_button.text = "switch[3] %s €" % g.defs["switch"]["price"]["fixed"]
+	server_button.text = "server[4] %s €" % g.defs["server"]["price"]["fixed"]
 
 func _handler(type, msg):
 	if type == g.RESET:
@@ -301,3 +305,25 @@ func _on_reload_pressed():
 	g.load_colors(colorschemes[colorscheme_select.selected])
 	get_tree().call_group(g.NEED_UPDATE_COLORSCHEME, "update")
 	_set_colorscheme_options()
+
+
+func _on_play_pressed():
+	timer.wait_time = 1
+	speed_label.text = "NORMAL"
+	if timer.is_stopped():
+		timer.start()
+	
+func _on_pause_pressed():
+	speed_label.text = "PAUSE"
+	timer.stop()
+
+
+func _on_fast_pressed():
+	timer.wait_time = 0.25
+	speed_label.text = "FAST"
+	if timer.is_stopped():
+		timer.start()
+
+
+func _on_timer_timeout():
+	md.emit_message(g.TICK, {})

@@ -14,9 +14,9 @@
     },
     "service": {
         "outline": "f4bf75",
-        "active": "f4bf75",
-        "disabled": "fa2772",
-        "selected": "f1ebeb"
+        "active": "8abeb7",
+        "down": "fa2772",
+        "inactive": "131312"
     },
     "background": "131312"
 }

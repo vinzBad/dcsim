@@ -18,7 +18,32 @@ func _ready():
 	
 
 func tick(t, msg):
-	pass
+	var uplinks = get_tree().get_nodes_in_group("uplink")
+	var switches = get_tree().get_nodes_in_group("switch")
+	var routers = get_tree().get_nodes_in_group("router")
+	var servers = get_tree().get_nodes_in_group("server")
+
+	
+	g.cashflow = 0
+	g.cashflow -= len(uplinks) * g.defs["uplink"]["price"]["pertick"]
+	g.cashflow -= len(routers) * g.defs["router"]["price"]["pertick"]
+	g.cashflow -= len(switches) * g.defs["switch"]["price"]["pertick"]
+	g.cashflow -= len(servers) * g.defs["server"]["price"]["pertick"]
+	
+	for server in servers:
+		var service = server.get_service()
+		if service == null:
+			continue
+		if service.in_use:
+			if service.is_up():
+				g.cashflow += 0.4
+		elif g.queue > 0 and randf() > 0.8:
+			g.queue -= 1
+			service.in_use = true
+			service.update()
+		
+	g.money += g.cashflow
+	
 	
 func load_save(t, msg):
 	var success
@@ -41,6 +66,8 @@ func reset(t=null, msg=null):
 
 func add_device(t, msg):
 	var d:Device = msg["device"]
+	var price = g.defs[d.device_type]["price"]["fixed"]
+	g.money -= price
 	entities.add_child(d)
 	d.update()
 #	d.global_position = camera.position - get_viewport_rect().size/2 +  msg["pos"] 
@@ -51,6 +78,15 @@ func add_connection(t, msg):
 	var c:Connection = msg["connection"]
 	entities.add_child(c)
 	c.set_owner(entities)
+
+func _draw():
+	return
+	for p in g.packet_nav.get_points():
+		var pos = g.packet_nav.get_point_position(p)
+		draw_circle(to_local(Vector2(pos.x, pos.y)), 10, Color.gold)
+		for c in g.packet_nav.get_point_connections(p):
+			var opos = g.packet_nav.get_point_position(c)
+			draw_line(to_local(Vector2(pos.x, pos.y)), to_local(Vector2(opos.x, opos.y)), Color.gold, 2, true)
 
 func _save(file="user://save.json"):	
 	var data = {}
@@ -118,6 +154,9 @@ func _load_save(file="user://save.json"):
 			md.emit_message(g.ERROR, {"error": "unable to set correct entity_name %s" % ed["name"]})
 			return false
 		e.load_from_save(ed["entity_data"])
+		
+		if e.has_method("start"):
+			e.start()
 		
 		
 	save_game.close()

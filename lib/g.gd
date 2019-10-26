@@ -5,6 +5,7 @@ var green = Color("#20C20E")
 
 ## VAR
 var money = 500
+var cashflow = 0
 var queue = 5
 
 ## Group Names

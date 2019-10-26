@@ -17,13 +17,13 @@ var port_end = null
 func _ready():
 	add_to_group(g.NEED_UPDATE_COLORSCHEME)
 	
-func start(port:Node2D):
+func start_on(port:Node2D):
 	self.global_position = port.global_position
 	is_active = true
 	port_start = port
 	port.set_conn(self)
 
-func finish(port:Node2D):
+func finish_on(port:Node2D):
 	compute_next_points(to_local(port.global_position))
 	commit_next_points()
 	update()
