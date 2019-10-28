@@ -15,8 +15,9 @@
     "service": {
         "outline": "007700",
         "active": "00ff00",
-        "disabled": "005500",
-        "selected": "00bb00"
+        "down": "005500",
+        "inactive": "001100"
     },
-    "background": "001100"
+    "background": "001100",
+    "packet": "00ff00"
 }

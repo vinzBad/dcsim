@@ -13,6 +13,7 @@ var state = IDLE
 var file_names = []
 var colorschemes = []
 var is_dragging = false
+var tick_speed = 0
 
 onready var file_select:OptionButton = $hbox/margin_buttons/vbox_buttons/file
 onready var colorscheme_select:OptionButton = $hbox_colorscheme/colorschemeselect
@@ -28,7 +29,7 @@ onready var router_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/r
 onready var switch_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/switch
 onready var server_button:Button = $hbox/margin_buttons/vbox_buttons/hbox/vbox/server
 
-onready var device_view =  $hbox_device
+onready var device_view = $hbox/margin_labels/hbox/vbox_labels/hbox_device
 
 onready var timer:Timer = $timer
 
@@ -45,14 +46,14 @@ func _ready():
 	_set_colorscheme_options()
 	_set_button_prices()
 	
-	device_view.visible = false
+	#device_view.visible = false
 	
 func _process(delta):
 	if state == PLACING:
 		handle_placing()
-	money_label.text = "%s €" % g.money
+	money_label.text = "%.2f €" % g.money
 	queue_label.text = "%s" % g.queue
-	cashflow_label.text = "%s €" % g.cashflow
+	cashflow_label.text = "%.2f €" % g.cashflow
 	
 
 func handle_placing():
@@ -208,8 +209,13 @@ func _handler(type, msg):
 	elif type == g.MOVE_DEVICE:
 		select_device(null)
 		select_port(null)
-		state = PLACING
+		state = PLACING		
 		device = msg["device"]
+		var price = g.defs[device.device_type]["price"]["fixed"]
+		g.money += price
+		for p in device.ports.get_children():
+			if p._conn:
+				p._conn.remove()
 		device.is_active = false
 		var owner = device.get_parent()
 		owner.remove_child(device)
@@ -221,6 +227,10 @@ func _handler(type, msg):
 			selected_port = null
 			select_device(null)
 			select_port(null)
+		
+		device = msg["device"]
+		var price = g.defs[device.device_type]["price"]["fixed"]
+		g.money += price
 		msg["device"].remove()
 	elif type == g.SELECT_SERVICE and state == IDLE:
 		select_service(msg["service"])
@@ -308,6 +318,7 @@ func _on_reload_pressed():
 
 
 func _on_play_pressed():
+	tick_speed = 1
 	timer.wait_time = 1
 	speed_label.text = "NORMAL"
 	if timer.is_stopped():
@@ -319,6 +330,7 @@ func _on_pause_pressed():
 
 
 func _on_fast_pressed():
+	tick_speed = 0.25
 	timer.wait_time = 0.25
 	speed_label.text = "FAST"
 	if timer.is_stopped():
@@ -326,4 +338,13 @@ func _on_fast_pressed():
 
 
 func _on_timer_timeout():
-	md.emit_message(g.TICK, {})
+	md.emit_message(g.TICK, {"speed": tick_speed})
+
+
+func _on_slomo_pressed():
+	tick_speed = 2
+	timer.wait_time = 2
+	speed_label.text = "SLOW"
+	if timer.is_stopped():
+		timer.start()
+

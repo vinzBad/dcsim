@@ -15,9 +15,13 @@ onready var control = $control
 onready var label = $control/label
 onready var world = get_parent().get_parent()
 
+var type_name = "device"
+
 var is_hovering = false
 var is_selected = false
 var is_active = false
+
+var is_bridge = true
 
 var hostname = ""
 var height = 2
@@ -26,6 +30,11 @@ func start():
 	g.packet_nav.add_point(uid, Vector3(global_position.x, global_position.y, 0))
 	add_to_group(device_type)
 	is_active = true
+	
+	for port in ports.get_children():
+		g.packet_nav.add_point(port.uid, Vector3(port.global_position.x, port.global_position.y, 0))
+		if is_bridge:
+			g.packet_nav.connect_points(uid, port.uid)
 
 func get_service():
 	for s in services.get_children():
@@ -36,6 +45,9 @@ func stop():
 	g.packet_nav.remove_point(uid)
 	remove_from_group(device_type)
 	is_active = false
+	
+	for port in ports.get_children():
+		g.packet_nav.remove_point(port.uid)
 	
 func _ready():
 	add_to_group(g.NEED_UPDATE_COLORSCHEME)
@@ -65,21 +77,21 @@ func _draw():
 
 func get_port_to_uid(uid):
 	for port in $ports.get_children():
-		if port.connected_port:
-			if port.connected_port.device.uid == uid:
+		if port.state == Port.UP:
+			if port.other_port().uid == uid:
 				return port
 	return null
 
 func port_up(my_port):
 	var other_port = my_port.other_port()
-	if !g.packet_nav.are_points_connected(uid, other_port.device.uid):
-		g.packet_nav.connect_points(uid, other_port.device.uid)
+	if !g.packet_nav.are_points_connected(my_port.uid, other_port.uid):
+		g.packet_nav.connect_points(my_port.uid, other_port.uid)
 
 func port_down(my_port):
 	var other_port = my_port.other_port()
 	if other_port != null:
-		if g.packet_nav.are_points_connected(uid, other_port.device.uid):
-			g.packet_nav.disconnect_points(uid, other_port.device.uid)
+		if g.packet_nav.are_points_connected(my_port.uid, other_port.uid):
+			g.packet_nav.disconnect_points(my_port.uid, other_port.uid)
 
 func remove():
 	self.stop()
@@ -102,18 +114,30 @@ func save():
 			"pos_x": port.position.x,
 			"pos_y": port.position.y,
 			"name": port.port_name,
-			"is_disabled": is_disabled
+			"is_disabled": is_disabled,
+			"is_bridge": is_bridge
 		})
+		
+	if services.get_child_count() > 0:
+		var s = services.get_children()[0]
+		var sd = {}
+		sd["pos_x"] = s.position.x
+		sd["pos_y"] = s.position.y
+		sd["service_name"] = s.service_name
+		sd["in_use"] = s.in_use
+		data["service"] = sd
 	
 	return data
 
 func register():
 	g.uid2device[uid] = self
+	for port in ports.get_children():
+		g.uid2device[port.uid] = port
 	g.hostname2device[hostname] = self
 	
 func is_moveable():
 	for port in ports.get_children():
-		if port.state == Port.UP:
+		if port.has_conn():
 			return false
 	return true
 
@@ -129,12 +153,18 @@ func init_from_def(def):
 
 
 func load_from_save(data:Dictionary):
+
 	self.hostname = data["hostname"]
 	self.label.text = hostname
 	self.device_type = data["device_type"]
 	self.height = data.get("height", 2)
 	self.control.rect_size.y = height * g.unit_height
-	self.register()
+	
+	if device_type == "server":
+		data["is_bridge"] = false
+	self.is_bridge = data.get("is_bridge", true)
+	
+
 	for pd in data["ports"]:
 		var p  = g.port.instance()
 		ports.add_child(p)
@@ -144,20 +174,24 @@ func load_from_save(data:Dictionary):
 		if pd.get("is_disabled", false):
 			p.disable()
 		p.register()
-	
+	self.register()
 	if not data.has("service") and device_type == "server":
 		data["service"] = {}
 		data["service"]["pos_x"] = 85
 		data["service"]["pos_y"] = 15
-		data["service"]["name"] = "empty"
+		data["service"]["service_name"] = "empty"
+		data["service"]["in_use"] = false
+	
 
+		
 	if data.has("service"):
 		var sd = data["service"]
 		var s = g.service.instance()
 		services.add_child(s)
 		s.position = Vector2(sd["pos_x"], sd["pos_y"])
-		s.service_name = sd["name"]
+		s.service_name = sd["service_name"]
 		s.device = self
+		s.in_use = sd["in_use"]
 	
 	
 	yield(get_tree(), "idle_frame")

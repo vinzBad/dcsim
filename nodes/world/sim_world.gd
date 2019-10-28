@@ -8,7 +8,11 @@ var site_name = "l33t.io"
 
 onready var entities = $entities
 
+var cashflow_samples = [0,0,0,0, 0, 0, 0, 0, 0]
+var last_money = 0
+
 func _ready():
+	last_money = g.money
 	md.connect_message(g.TICK, self, "tick")
 	md.connect_message(g.LOAD, self, "load_save")
 	md.connect_message(g.SAVE, self, "save")
@@ -22,29 +26,47 @@ func tick(t, msg):
 	var switches = get_tree().get_nodes_in_group("switch")
 	var routers = get_tree().get_nodes_in_group("router")
 	var servers = get_tree().get_nodes_in_group("server")
-
+	var packets = get_tree().get_nodes_in_group(g.PACKET)
 	
-	g.cashflow = 0
-	g.cashflow -= len(uplinks) * g.defs["uplink"]["price"]["pertick"]
-	g.cashflow -= len(routers) * g.defs["router"]["price"]["pertick"]
-	g.cashflow -= len(switches) * g.defs["switch"]["price"]["pertick"]
-	g.cashflow -= len(servers) * g.defs["server"]["price"]["pertick"]
+	
+	g.money -= len(uplinks) * g.defs["uplink"]["price"]["pertick"]
+	g.money -= len(routers) * g.defs["router"]["price"]["pertick"]
+	g.money -= len(switches) * g.defs["switch"]["price"]["pertick"]
+	g.money -= len(servers) * g.defs["server"]["price"]["pertick"]
 	
 	for server in servers:
 		var service = server.get_service()
 		if service == null:
 			continue
 		if service.in_use:
-			if service.is_up():
-				g.cashflow += 0.4
-		elif g.queue > 0 and randf() > 0.8:
+			if randf() < 0.25 and service.is_up(uplinks):
+				gen_packet(service)
+		elif g.queue > 0 and randf() > 0.8 and service.is_up(uplinks):
 			g.queue -= 1
-			service.in_use = true
+			service.go_live()
 			service.update()
-		
-	g.money += g.cashflow
+	if g.queue == 0 and randf() < 0.1:
+		g.queue += 1
+	
+	get_tree().call_group(g.PACKET, "next", msg["speed"])
+	
+	cashflow_samples.pop_front()
+	cashflow_samples.push_back(g.money - last_money)
+	g.cashflow = 0
+	for sample in cashflow_samples:
+		g.cashflow += sample
+	
+	g.cashflow = stepify(g.cashflow/float(len(cashflow_samples)), 0.01)
+	
+	last_money = g.money
 	
 	
+func gen_packet(service):
+	var p = g.packet.instance()
+	entities.add_child(p)
+	p.start(service.uplink, service.port)
+	
+
 func load_save(t, msg):
 	var success
 	if msg["file"]:
@@ -79,21 +101,13 @@ func add_connection(t, msg):
 	entities.add_child(c)
 	c.set_owner(entities)
 
-func _draw():
-	return
-	for p in g.packet_nav.get_points():
-		var pos = g.packet_nav.get_point_position(p)
-		draw_circle(to_local(Vector2(pos.x, pos.y)), 10, Color.gold)
-		for c in g.packet_nav.get_point_connections(p):
-			var opos = g.packet_nav.get_point_position(c)
-			draw_line(to_local(Vector2(pos.x, pos.y)), to_local(Vector2(opos.x, opos.y)), Color.gold, 2, true)
-
 func _save(file="user://save.json"):	
 	var data = {}
 	data["version"] = 3
 	data["site_name"] = self.site_name
 	data["hostname_counter"] = g.hostname_counter
 	data["entities"] = []
+	data["money"] = g.money
 	
 	for entity in entities.get_children():
 		if !entity.has_method("save"):
@@ -142,6 +156,7 @@ func _load_save(file="user://save.json"):
 		md.emit_message(g.ERROR, {"error": "unknown version %s in %s" % [v,file]})
 		return false
 	
+	g.money = data.get("money", 333)
 	self.site_name = data["site_name"]
 	md.emit_message(g.SITE_NAME_CHANGE, {"name": self.site_name})
 	g.hostname_counter = data["hostname_counter"]

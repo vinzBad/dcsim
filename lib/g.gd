@@ -10,6 +10,7 @@ var queue = 5
 
 ## Group Names
 const NEED_UPDATE_COLORSCHEME = "NEED_UPDATE_COLORSCHEME"
+const PACKET = "PACKET"
 
 ## Message Names
 const ERROR = "ERROR"
@@ -76,6 +77,7 @@ func reset(t=null, msg=null):
 	hostname2device = {}
 	money = 500
 	queue = 5
+	cashflow = 0
 	load_defs()
 	load_colors("res://content/colorschemes/default.json")
 

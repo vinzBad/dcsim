@@ -3,4 +3,6 @@
 [ext_resource path="res://nodes/bits/packet/packet.gd" type="Script" id=1]
 
 [node name="packet" type="Node2D"]
+z_index = 15
+z_as_relative = false
 script = ExtResource( 1 )

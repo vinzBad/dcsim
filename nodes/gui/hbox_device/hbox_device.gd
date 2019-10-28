@@ -49,7 +49,7 @@ func update_button_labels():
 			disconnect.disabled = false
 			
 	if _device:
-		move.disabled = !_device.is_moveable()
+		move.disabled = false
 	hide()
 	show()
 
@@ -76,6 +76,6 @@ func _on_disconnect_pressed():
 
 
 func _on_move_pressed():
-	if _device and _device.is_moveable():
+	if _device:
 		_device.stop()
 		md.emit_message(g.MOVE_DEVICE, {"device": _device})

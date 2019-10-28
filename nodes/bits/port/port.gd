@@ -13,9 +13,15 @@ var is_selected = false
 var device = null
 var state = DOWN
 
+var uid
+
 var _conn: Connection
 
+
+var type_name = "port"
+
 func _ready():
+	uid = g.get_uid()
 	add_to_group(g.NEED_UPDATE_COLORSCHEME)
 
 func other_port():

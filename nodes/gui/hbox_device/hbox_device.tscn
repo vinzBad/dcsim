@@ -11,34 +11,36 @@ grow_horizontal = 0
 script = ExtResource( 1 )
 
 [node name="labels" type="VBoxContainer" parent="."]
-margin_right = 82.0
+margin_right = 60.0
 margin_bottom = 128.0
 
 [node name="hostname" type="Label" parent="labels"]
-margin_right = 82.0
+margin_right = 60.0
 margin_bottom = 20.0
 text = "host: "
 
 [node name="move" type="Button" parent="labels"]
 margin_top = 24.0
-margin_right = 82.0
+margin_right = 60.0
 margin_bottom = 50.0
 hint_tooltip = "poweroff device"
 text = "move"
 
 [node name="port" type="Label" parent="labels"]
 margin_top = 54.0
-margin_right = 82.0
+margin_right = 60.0
 margin_bottom = 74.0
 text = "port:"
 
 [node name="port_state" type="Label" parent="labels"]
+visible = false
 margin_top = 78.0
-margin_right = 82.0
+margin_right = 60.0
 margin_bottom = 98.0
 align = 2
 
 [node name="disable" type="Button" parent="labels"]
+visible = false
 margin_top = 102.0
 margin_right = 82.0
 margin_bottom = 128.0
@@ -46,8 +48,8 @@ hint_tooltip = "disable port"
 text = "disable"
 
 [node name="values" type="VBoxContainer" parent="."]
-margin_left = 86.0
-margin_right = 198.0
+margin_left = 64.0
+margin_right = 176.0
 margin_bottom = 128.0
 
 [node name="hostname" type="Label" parent="values"]
@@ -68,14 +70,15 @@ margin_right = 112.0
 margin_bottom = 74.0
 
 [node name="port_state" type="Label" parent="values"]
+visible = false
 margin_top = 78.0
 margin_right = 112.0
 margin_bottom = 98.0
 
 [node name="disconnect" type="Button" parent="values"]
-margin_top = 102.0
+margin_top = 78.0
 margin_right = 112.0
-margin_bottom = 128.0
+margin_bottom = 104.0
 hint_tooltip = "disconnect port"
 text = "disconnect"
 [connection signal="pressed" from="labels/move" to="." method="_on_move_pressed"]

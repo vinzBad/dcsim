@@ -62,7 +62,6 @@ margin_bottom = 26.0
 text = "file"
 
 [node name="hbox" type="HBoxContainer" parent="hbox/margin_buttons/vbox_buttons"]
-editor/display_folded = true
 margin_top = 30.0
 margin_right = 102.0
 margin_bottom = 250.0
@@ -135,15 +134,15 @@ rect_min_size = Vector2( 5, 10 )
 
 [node name="margin_labels" type="MarginContainer" parent="hbox"]
 margin_left = 115.0
-margin_right = 289.0
+margin_right = 375.0
 margin_bottom = 250.0
 
 [node name="hbox" type="HBoxContainer" parent="hbox/margin_labels"]
-margin_right = 174.0
+margin_right = 260.0
 margin_bottom = 250.0
 
 [node name="vbox_labels" type="VBoxContainer" parent="hbox/margin_labels/hbox"]
-margin_right = 90.0
+margin_right = 176.0
 margin_bottom = 250.0
 
 [node name="site" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
@@ -153,31 +152,45 @@ margin_bottom = 20.0
 text = "SITE:"
 
 [node name="money" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
-margin_right = 90.0
+margin_right = 176.0
 margin_bottom = 20.0
 text = "MONEY:"
 
 [node name="cashflow" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
 margin_top = 24.0
-margin_right = 90.0
+margin_right = 176.0
 margin_bottom = 44.0
 text = "CASHFLOW:"
 
 [node name="servicequeue" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
 margin_top = 48.0
-margin_right = 90.0
+margin_right = 176.0
 margin_bottom = 68.0
 text = "QUEUE:"
 
 [node name="speed" type="Label" parent="hbox/margin_labels/hbox/vbox_labels"]
 margin_top = 72.0
-margin_right = 90.0
+margin_right = 176.0
 margin_bottom = 92.0
 text = "SPEED:"
 
+[node name="spacer2" type="Control" parent="hbox/margin_labels/hbox/vbox_labels"]
+margin_top = 96.0
+margin_right = 176.0
+margin_bottom = 126.0
+rect_min_size = Vector2( 0, 30 )
+
+[node name="hbox_device" parent="hbox/margin_labels/hbox/vbox_labels" instance=ExtResource( 2 )]
+anchor_left = 0.0
+anchor_right = 0.0
+margin_left = 0.0
+margin_top = 130.0
+margin_right = 176.0
+margin_bottom = 234.0
+
 [node name="vbox_values" type="VBoxContainer" parent="hbox/margin_labels/hbox"]
-margin_left = 94.0
-margin_right = 174.0
+margin_left = 180.0
+margin_right = 260.0
 margin_bottom = 250.0
 
 [node name="site" type="Label" parent="hbox/margin_labels/hbox/vbox_values"]
@@ -213,16 +226,6 @@ margin_bottom = 92.0
 text = "PAUSE"
 align = 2
 
-[node name="hbox_device" parent="." instance=ExtResource( 2 )]
-anchor_left = 0.0
-anchor_top = 0.5
-anchor_right = 0.0
-anchor_bottom = 0.5
-margin_left = 6.0
-margin_top = -8.0
-margin_right = 204.0
-margin_bottom = 120.0
-
 [node name="hbox_colorscheme" type="HBoxContainer" parent="."]
 editor/display_folded = true
 anchor_left = 1.0
@@ -257,17 +260,25 @@ grow_vertical = 0
 custom_fonts/font = SubResource( 11 )
 text = "||"
 
-[node name="play" type="Button" parent="hbox_tickspeed"]
+[node name="slomo" type="Button" parent="hbox_tickspeed"]
 margin_left = 30.0
-margin_right = 59.0
+margin_right = 73.0
+margin_bottom = 33.0
+grow_vertical = 0
+custom_fonts/font = SubResource( 11 )
+text = "| ▶"
+
+[node name="play" type="Button" parent="hbox_tickspeed"]
+margin_left = 77.0
+margin_right = 106.0
 margin_bottom = 33.0
 grow_vertical = 0
 custom_fonts/font = SubResource( 11 )
 text = "▶"
 
 [node name="fast" type="Button" parent="hbox_tickspeed"]
-margin_left = 63.0
-margin_right = 109.0
+margin_left = 110.0
+margin_right = 156.0
 margin_bottom = 33.0
 grow_vertical = 0
 custom_fonts/font = SubResource( 11 )
@@ -284,6 +295,7 @@ text = "▶▶"
 [connection signal="item_selected" from="hbox_colorscheme/colorschemeselect" to="." method="_on_colorschemeselect_item_selected"]
 [connection signal="pressed" from="hbox_colorscheme/reload" to="." method="_on_reload_pressed"]
 [connection signal="pressed" from="hbox_tickspeed/pause" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="hbox_tickspeed/slomo" to="." method="_on_slomo_pressed"]
 [connection signal="pressed" from="hbox_tickspeed/play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="hbox_tickspeed/fast" to="." method="_on_fast_pressed"]
 [connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]
