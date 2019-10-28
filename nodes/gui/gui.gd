@@ -182,7 +182,7 @@ func _set_button_prices():
 
 func _handler(type, msg):
 	if type == g.RESET:
-		if device:
+		if is_instance_valid(device):
 			device.queue_free()
 		device = null
 		selected_device = null

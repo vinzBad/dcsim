@@ -99,6 +99,10 @@ func next(speed):
 	set_process(true)
 	var start_port = current_device
 	var connection = current_device._conn
+	if connection == null:
+		queue_free()
+		set_process(false)
+		return
 	self.global_position = start_port.global_position
 	next_points_index = 0
 	
