@@ -98,6 +98,11 @@ func next(speed):
 	
 	set_process(true)
 	var start_port = current_device
+	if not is_instance_valid(current_device):
+		queue_free()
+		set_process(false)
+		return
+		
 	var connection = current_device._conn
 	if connection == null:
 		queue_free()
