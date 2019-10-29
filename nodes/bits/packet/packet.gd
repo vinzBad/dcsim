@@ -108,6 +108,10 @@ func next(speed):
 		queue_free()
 		set_process(false)
 		return
+	if current_device.other_port() == null:
+		queue_free()
+		set_process(false)
+		return
 	self.global_position = start_port.global_position
 	next_points_index = 0
 	
@@ -133,6 +137,7 @@ func next(speed):
 	distance_per_second = full_distance / speed
 	
 	self.global_position = current_device.global_position
+	self.visible = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
@@ -143,7 +148,10 @@ func get_current_index():
 	return len(next_points) -1
 	
 func _process(delta):
+#	distance_per_second = 400
 	current_distance += distance_per_second * delta
+	if current_distance >= full_distance:
+		self.visible = false
 	current_distance = clamp(current_distance, 0, full_distance)
 	var i = get_current_index()
 	var d = (next_points[i+1] - next_points[i]).normalized()

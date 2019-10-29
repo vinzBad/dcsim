@@ -12,7 +12,7 @@ script = ExtResource( 1 )
 
 [node name="labels" type="VBoxContainer" parent="."]
 margin_right = 60.0
-margin_bottom = 128.0
+margin_bottom = 104.0
 
 [node name="hostname" type="Label" parent="labels"]
 margin_right = 60.0
@@ -50,7 +50,7 @@ text = "disable"
 [node name="values" type="VBoxContainer" parent="."]
 margin_left = 64.0
 margin_right = 176.0
-margin_bottom = 128.0
+margin_bottom = 104.0
 
 [node name="hostname" type="Label" parent="values"]
 margin_right = 112.0
