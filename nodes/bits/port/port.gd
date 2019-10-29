@@ -45,10 +45,10 @@ func set_conn(conn:Connection):
 func remove_conn():
 	if !_conn:
 		return
-	_conn = null
 	if state == UP:
 		state = DOWN
 		device.port_down(self)
+	_conn = null
 	update()
 	
 func disable():
