@@ -57,7 +57,8 @@ func _process(delta):
 	
 
 func handle_placing():
-	device.global_position = g.ridify(device.get_global_mouse_position())
+	if is_instance_valid(device):
+		device.global_position = g.ridify(device.get_global_mouse_position())
 
 func _input(event):
 	if event.is_action_pressed("gui_cancel"):
@@ -166,7 +167,7 @@ func finish_connecting(port):
 
 func start_placing(device_type):
 	state = PLACING
-	if device:
+	if is_instance_valid(device):
 		device.queue_free()
 	device = g.device.instance()
 	get_parent().add_child(device)
@@ -228,10 +229,10 @@ func _handler(type, msg):
 			select_device(null)
 			select_port(null)
 		
-		device = msg["device"]
-		var price = g.defs[device.device_type]["price"]["fixed"]
+		var d = msg["device"]
+		var price = g.defs[d.device_type]["price"]["fixed"]
 		g.money += price
-		msg["device"].remove()
+		d.remove()
 	elif type == g.SELECT_SERVICE and state == IDLE:
 		select_service(msg["service"])
 
